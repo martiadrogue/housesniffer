@@ -1,0 +1,11 @@
+# just I want to shut up this deprecation annoying message, I am just playing,
+# I'll take care of that later, but now leave me alone
+# monolog:
+#     handlers:
+#         main:
+#             type:  stream
+#             path:  %kernel.logs_dir%/%kernel.environment%.log
+#             level: debug
+#             formatter: monolog.formatter.session_request
+#             channels:
+#              -  '!php' # <----------- add this line
