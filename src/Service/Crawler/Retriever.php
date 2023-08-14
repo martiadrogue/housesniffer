@@ -20,7 +20,6 @@ class Retriever
         $this->logger = $logger;
     }
 
-
     /**
      * Fetch the house list information from idealista
      *
