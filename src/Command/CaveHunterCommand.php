@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Service\PerformanceService;
-use App\Service\Crawler\IdealistaCrawler;
+use App\Service\Crawler\Operator;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Console\Command\Command;
@@ -21,9 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CaveHunterCommand extends Command
 {
     private PerformanceService $performanceTracker;
-    private IdealistaCrawler $crawler;
+    private Operator $crawler;
 
-    public function __construct(PerformanceService $performanceTracker = null, IdealistaCrawler $crawler = null)
+    public function __construct(PerformanceService $performanceTracker = null, Operator $crawler = null)
     {
         $this->performanceTracker = $performanceTracker;
         $this->crawler = $crawler;
@@ -57,7 +57,7 @@ class CaveHunterCommand extends Command
         }
 
         // !TODO zone
-        $this->crawler->parseList();
+        $this->crawler->update();
 
         // !Food zone
         $output = $this->performanceTracker->stop();
