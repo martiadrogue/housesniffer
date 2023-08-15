@@ -3,8 +3,10 @@
 namespace App\Service\Crawler;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Retriever
@@ -23,32 +25,64 @@ class Retriever
     /**
      * Fetch the house list information from idealista
      *
+     * @param string $name
+     * @param integer $page
      * @return string
      */
-    public function fetchList(int $currentPage): string
+    public function fetchList(string $name, int $page): string
     {
+        $data = Yaml::parseFile("config/{$name}.yml");
+        $data['query']['page'] = $page;
+        $data['url'] = $this->prepareUrl($data['url'], $data['query']);
+
         return $this->cache->get(
-            'idealista_list_' . $currentPage,
-            function (ItemInterface $item) use ($currentPage): string {
+            sprintf('%s_%s', $name, $page),
+            function (ItemInterface $item) use ($data): string {
                 $item->expiresAfter(3600 * 24);
 
-                $url = 'https://www.idealista.com';
-                $url .= "/alquiler-viviendas/barcelona-barcelona/pagina-{$currentPage}.htm";
-                $url .= '?' . http_build_query([
-                    'ordenado-por' => 'fecha-publicacion-desc',
-                ]);
-                $userAgent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0';
-                $response = $this->client->request('GET', $url, [
-                    'headers' => [
-                        'User-Agent' => $userAgent,
-                        'Accept-Language' => 'en-US,en;q=0.5',
-                    ],
+                $response = $this->client->request($data['method'], $data['url'], [
+                    'headers' => $data['headers'],
                 ]);
                 $content = $response->getContent();
-                $this->logger->info('well done');
+
+                $this->logResult($response);
 
                 return $content;
             }
         );
+    }
+
+    private function logResult(ResponseInterface $response): void
+    {
+        $info = $response->getInfo();
+
+        $message = "Response data: Time {$info['total_time']}, ";
+        $message .= "Size {$info['size_download']}, ";
+        $message .= "Speed {$info['speed_download']}, ";
+        $message .= "Ip {$info['primary_ip']}:{$info['primary_port']}";
+
+        $this->logger->info($message);
+    }
+
+    /**
+     * Format data with real values
+     *
+     * @param string $url
+     * @param string[] $queryMap
+     * @return string
+     */
+    private function prepareUrl(string $url, array $queryMap): string
+    {
+        $query = '';
+        foreach ($queryMap as $key => $value) {
+            if (str_contains($url, "{{$key}}")) {
+                $url = preg_replace("/{($key)}/", $value, $url);
+                continue;
+            }
+
+            $query .= sprintf('&%s=%s', $key, $value);
+        }
+
+        return sprintf('%s?%s', $url, $query);
     }
 }

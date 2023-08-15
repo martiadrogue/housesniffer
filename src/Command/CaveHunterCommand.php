@@ -34,8 +34,14 @@ class CaveHunterCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addArgument('target', InputArgument::REQUIRED, 'Target to hunt')
+            ->addOption(
+                'mode',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Way to hunt the data, `details` or `list`, `list` by default',
+                'list'
+            )
         ;
     }
 
@@ -43,20 +49,22 @@ class CaveHunterCommand extends Command
     {
         // !Head zone
         $this->performanceTracker->start();
-
-        // !Options zones
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
+        // !Input zones
+        $target = $input->getArgument('target');
+        if ($target) {
+            $io->note(sprintf('Your target is: %s', $target));
         }
 
-        if ($input->getOption('option1')) {
-            // ...
+        $mode = $input->getOption('mode');
+        if ($input->getOption('mode')) {
+            $io->note(sprintf('Your attack vector is from: %s', $mode));
         }
 
         // !TODO zone
+        $name = sprintf('%s_%s', $target, $mode);
+        $this->crawler->setTarget($name);
         $this->crawler->update();
 
         // !Food zone

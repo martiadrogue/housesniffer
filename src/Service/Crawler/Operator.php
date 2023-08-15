@@ -13,31 +13,37 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class Operator
 {
+    private string $name;
     private Retriever $retriever;
     private LoggerInterface $logger;
     private int $currentPageNumbe;
-    private string $fileName;
+    private Uuid $id;
 
-    private const CSV_PATH = 'var/csv/homes';
+    private const CSV_PATH = 'var/csv/';
 
     public function __construct(Retriever $retriever, LoggerInterface $logger)
     {
         $this->retriever = $retriever;
         $this->logger = $logger;
+        $this->id = Uuid::v4();
 
-        $this->fileName = self::CSV_PATH . '_' . Uuid::v4() . '.csv';
         $this->currentPageNumbe = 1;
     }
 
     public function update(): void
     {
-        $stream = $this->retriever->fetchList($this->currentPageNumbe);
+        $stream = $this->retriever->fetchList($this->name, $this->currentPageNumbe);
         $parser = new Parser($stream, $this, $this->logger);
         $data = $parser->parse();
         $this->persistData($data);
 
         $this->currentPageNumbe += 1;
         $parser->seekNextPage();
+    }
+
+    public function setTarget(string $name): void
+    {
+        $this->name = $name;
     }
 
     /**
@@ -51,12 +57,14 @@ class Operator
         $context = [];
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $filesystem = new Filesystem();
+        $fileName = self::CSV_PATH;
+        $fileName .= sprintf('%s_%s.csv', $this->name, $this->id);
 
-        if ($filesystem->exists($this->fileName)) {
-            $context['no_headers'] = true;
+        if ($filesystem->exists($fileName)) {
+            $context['no_headers'] = true;/*  */
         }
 
         $csv = $serializer->encode($data, 'csv', $context);
-        $filesystem->appendToFile($this->fileName, $csv);
+        $filesystem->appendToFile($fileName, $csv);
     }
 }
