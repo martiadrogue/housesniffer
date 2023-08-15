@@ -29,9 +29,7 @@ class Parser
         return $this->crawler->filter('.extended-item')->each(function (Crawler $node, $index): array {
             $nodeLink = $node->filter('.item-link');
             $title = $nodeLink->attr('title');
-
-            $details = $node->filter('.item-info-container .item-detail-char')->text();
-            preg_match('/(\d+ \w+[\p{No}\.]) (\d+ \w+[\p{No}\.]) (.+)|(\d+ \w+[\p{No}\.]) (.+)/u', $details, $match);
+            $detailsMap = $this->parseDetails($node);
 
             $this->logger->notice('Parse house ' . $title);
 
@@ -41,9 +39,9 @@ class Parser
                 'title' => $title,
                 'picture' => $this->parsePicture($node),
                 'price' => $node->filter('.item-info-container .item-price')->text(),
-                'details.rooms' => 4 == count($match) ? $match[1] : $match[2],
-                'details.space' => 6 == count($match) ? $match[4] : $match[2],
-                'details.other' => $match[ count($match) - 1 ],
+                'rooms' => $detailsMap['rooms'],
+                'space' => $detailsMap['space'],
+                'floor' => $detailsMap['floor'],
             ];
         });
     }
@@ -63,5 +61,38 @@ class Parser
         }
 
         return '';
+    }
+
+    /**
+     * Parse item details
+     *
+     * @param Crawler $node
+     * @return array<string, string>
+     */
+    private function parseDetails(Crawler $node): array
+    {
+        $detailsMap = [
+            'rooms' => '/(\d+\shab.)/u',
+            'space' => '/(\d+\sm[\p{No}])/u',
+            'floor' => '/(.+ascensor$)/u',
+        ];
+
+        $detailsList = $node->filter('.item-info-container .item-detail')->each(
+            function (Crawler $nodeDetails, $index): string {
+                return $nodeDetails->text();
+            }
+        );
+
+        foreach ($detailsMap as $key => $expression) {
+            $detailsMap[$key] = '';
+            foreach ($detailsList as $value) {
+                if (preg_match($expression, $value, $match)) {
+                    $detailsMap[$key] = $match[1];
+                    break;
+                }
+            }
+        }
+
+        return $detailsMap;
     }
 }
