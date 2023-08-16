@@ -46,6 +46,11 @@ class Operator
         $this->name = $name;
     }
 
+    public function getTarget(): string
+    {
+        return $this->name;
+    }
+
     /**
      * Persit data in a file
      *
