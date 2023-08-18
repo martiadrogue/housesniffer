@@ -7,5 +7,5 @@ fieldList:
   price: .item-info-container .item-price@_text@/[^\d]+/
   picture: picture.item-multimedia div.placeholder img@src
   rooms: .item-detail:nth-child(1)@_text@/[^\d]+/
-  space: .item-detail:nth-child(2)@_text@/[^\d]+/
+  size: .item-detail:nth-child(2)@_text@/[^\d]+/
   floor: .item-detail:nth-child(3)@_text
