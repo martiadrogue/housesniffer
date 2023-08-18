@@ -1,0 +1,11 @@
+---
+item: .rating__new
+fieldList:
+  reference: .results__link@data-id
+  url: .results__link@data-href
+  title: .listing__title__text@_text
+  price: .result__details__price span@_text@/[^\d]+/
+  picture: .listing_list__cover img.desktopImg@data-lazy
+  rooms: .summary-item.rooms span.rooms@_text@/[^\d]+/
+  size: .summary-item.size span.size@_text@/[^\d]+/
+page: .pagination-bar .pagination__link@_text
