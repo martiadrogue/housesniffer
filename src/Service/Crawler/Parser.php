@@ -13,11 +13,21 @@ class Parser
     private Crawler $crawler;
     private LoggerInterface $logger;
 
+    /**
+     * List path to the data to scrap
+     *
+     * @var array<mixed>
+     */
+    private array $pathMap;
+
     public function __construct(string $stream, Operator $operator, LoggerInterface $logger)
     {
         $this->operator = $operator;
         $this->crawler = new Crawler($stream);
         $this->logger = $logger;
+
+        $target = $this->operator->getTarget();
+        $this->pathMap = Yaml::parseFile(sprintf("config/%s_item.yml", $target));
     }
 
     /**
@@ -27,22 +37,20 @@ class Parser
      */
     public function parse(): array
     {
-        $target = $this->operator->getTarget();
-        $pathMap = Yaml::parseFile("config/{$target}_item.yml");
 
-        return $this->crawler->filter($pathMap['item'])->each(function (Crawler $node, $index) use ($pathMap): array {
+        return $this->crawler->filter($this->pathMap['item'])->each(function (Crawler $node, $index): array {
             $nodeLink = $node->filter('.item-link');
 
             $item = [];
-            foreach ($pathMap['fieldList'] as $key => $fullPath) {
-                $pathList = explode('@', $fullPath);
-                $value = $node->filter($pathList[0])->extract([$pathList[1]])[0] ?? null;
+            foreach ($this->pathMap['fieldList'] as $key => $path) {
+                $hintList = explode('@', $path);
+                $value = $node->filter($hintList[0])->extract([$hintList[1]])[0] ?? '';
 
-                if (isset($pathList[2])) {
-                    $value = preg_replace($pathList[2], '', $value);
+                if (isset($hintList[2])) {
+                    $value = preg_replace($hintList[2], '', $value);
                 }
 
-                $item[$key] = $value;
+                $item[$key] = trim($value);
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
@@ -51,10 +59,23 @@ class Parser
         });
     }
 
-    public function seekNextPage(): void
+    public function seekPage(int $currentPage): void
     {
-        if ($this->crawler->filter('.next')->count()) {
-            $this->operator->update();
+        $hintList = explode('@', $this->pathMap['page']);
+        $pageList = $this->crawler->filter($hintList[0])->reduce(function (Crawler $node, $index) use ($hintList): bool {
+            $value = $node->extract([$hintList[1]])[0] ?? '';
+            if (is_numeric($value)) {
+                return true;
+            }
+
+            return false;
+        })->each(function (Crawler $node, $index) use ($hintList): int {
+
+            return (int) $node->extract([$hintList[1]])[0];
+        });
+
+        if (in_array($currentPage, $pageList)) {
+                $this->operator->update();
         }
     }
 }

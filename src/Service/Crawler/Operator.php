@@ -38,7 +38,7 @@ class Operator
         $this->persistData($data);
 
         $this->currentPageNumbe += 1;
-        $parser->seekNextPage();
+        $parser->seekPage($this->currentPageNumbe);
     }
 
     public function setTarget(string $name): void
