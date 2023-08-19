@@ -44,7 +44,7 @@ class HintService
     }
 
     /**
-     * Start the performance measurement
+     * Get hints for content
      *
      * @return mixed[]
      */
@@ -54,7 +54,7 @@ class HintService
     }
 
     /**
-     * Start the performance measurement
+     * Get hints for requests
      *
      * @param integer $currentPage
      * @return mixed[]
