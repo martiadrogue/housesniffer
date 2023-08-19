@@ -58,7 +58,7 @@ class Retriever
      * index. Position is the default mutator. Index is less one unite relative
      * to position.
      *
-     * @param array $data
+     * @param array<mixed> $data
      * @return integer
      */
     private function getMutator(array $data): int
