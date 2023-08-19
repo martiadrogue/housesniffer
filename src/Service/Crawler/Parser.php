@@ -50,7 +50,7 @@ class Parser
                     $value = preg_replace($hintList[2], '', $value);
                 }
 
-                $item[$key] = trim($value);
+                $item[$key] = preg_replace('/\s+/', ' ', trim($value));
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
