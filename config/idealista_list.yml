@@ -1,6 +1,6 @@
 ---
-method: GET
 url: https://www.idealista.com/alquiler-viviendas/barcelona-barcelona/pagina-{page}.htm
+method: GET
 query:
   ordenado-por: fecha-publicacion-desc
 parameters:

@@ -1,6 +1,6 @@
 ---
-method: GET
 url: https://www.nestoria.es/barcelona/casa/alquiler/{page}
+method: GET
 query:
   sort: newest
 parameters:
