@@ -66,6 +66,7 @@ class CaveHunterCommand extends Command
         $name = sprintf('%s_%s', $target, $mode);
         $this->crawler->setTarget($name);
         $this->crawler->update();
+        $this->crawler->secureResults();
 
         // !Food zone
         $output = $this->performanceTracker->stop();

@@ -19,6 +19,7 @@ class Operator
     private int $currentPageNumbe;
     private Uuid $id;
 
+    private const CSV_TMP_PATH = 'var/tmp/csv/';
     private const CSV_PATH = 'var/csv/';
 
     public function __construct(Retriever $retriever, LoggerInterface $logger)
@@ -51,6 +52,18 @@ class Operator
         return $this->name;
     }
 
+    public function secureResults(): void
+    {
+        $filesystem = new Filesystem();
+        $origin = self::CSV_TMP_PATH;
+        $origin .= sprintf('%s_%s.csv', $this->name, $this->id);
+        $target = self::CSV_PATH;
+        $target .= sprintf('%s_%s.csv', $this->name, $this->id);
+
+        $filesystem->rename($origin, $target);
+    }
+
+
     /**
      * Persit data in a file
      *
@@ -62,7 +75,7 @@ class Operator
         $context = [];
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $filesystem = new Filesystem();
-        $fileName = self::CSV_PATH;
+        $fileName = self::CSV_TMP_PATH;
         $fileName .= sprintf('%s_%s.csv', $this->name, $this->id);
 
         if ($filesystem->exists($fileName)) {
