@@ -32,7 +32,8 @@ class Retriever
     public function fetchList(string $name, int $page): string
     {
         $data = Yaml::parseFile("config/{$name}.yml");
-        $data['query']['page'] = $page;
+        $mutator = $this->getMutator($data);
+        $data['query']['page'] = $page + $mutator;
         $data['url'] = $this->prepareUrl($data['url'], $data['query']);
 
         return $this->cache->get(
@@ -50,6 +51,25 @@ class Retriever
                 return $content;
             }
         );
+    }
+
+    /**
+     * Return the mutator for the url page, there are 2 mutators; position and
+     * index. Position is the default mutator. Index is less one unite relative
+     * to position.
+     *
+     * @param array $data
+     * @return integer
+     */
+    private function getMutator(array $data): int
+    {
+        foreach ($data['parameters'] as $parameter) {
+            if ('index' == $parameter['schema']) {
+                return -1;
+            }
+        }
+
+        return 0;
     }
 
     private function logResult(ResponseInterface $response): void
