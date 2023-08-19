@@ -27,7 +27,7 @@ class Parser
         $this->logger = $logger;
 
         $target = $this->operator->getTarget();
-        $this->pathMap = Yaml::parseFile(sprintf("config/%s_item.yml", $target));
+        $this->pathMap = Yaml::parseFile(sprintf("config/hints/%s_item.yml", $target));
     }
 
     /**

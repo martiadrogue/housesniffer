@@ -31,7 +31,7 @@ class Retriever
      */
     public function fetchList(string $name, int $page): string
     {
-        $data = Yaml::parseFile("config/{$name}.yml");
+        $data = Yaml::parseFile(sprintf("config/hints/%s.yml", $name));
         $mutator = $this->getMutator($data);
         $data['query']['page'] = $page + $mutator;
         $data['url'] = $this->prepareUrl($data['url'], $data['query']);
