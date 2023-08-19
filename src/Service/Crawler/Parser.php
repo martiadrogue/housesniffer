@@ -63,14 +63,16 @@ class Parser
     public function seekPage(int $currentPage): void
     {
         $hintList = explode('@', $this->pathMap['page']);
-        $pageList = $this->crawler->filter($hintList[0])->reduce(function (Crawler $node, $index) use ($hintList): bool {
-            $value = $node->extract([$hintList[1]])[0] ?? '';
-            if (is_numeric($value)) {
-                return true;
-            }
+        $pageList = $this->crawler->filter($hintList[0])->reduce(
+            function (Crawler $node, $index) use ($hintList): bool {
+                $value = $node->extract([$hintList[1]])[0] ?? '';
+                if (is_numeric($value)) {
+                    return true;
+                }
 
-            return false;
-        })->each(function (Crawler $node, $index) use ($hintList): int {
+                return false;
+            }
+        )->each(function (Crawler $node, $index) use ($hintList): int {
 
             return (int) $node->extract([$hintList[1]])[0];
         });
