@@ -2,6 +2,7 @@
 
 namespace App\Service\Crawler;
 
+use App\Service\HintService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
@@ -27,7 +28,7 @@ class Parser
         $this->logger = $logger;
 
         $target = $this->operator->getTarget();
-        $this->pathMap = Yaml::parseFile(sprintf("config/hints/%s_item.yml", $target));
+        $this->pathMap = HintService::parseHintsContent($target);
     }
 
     /**

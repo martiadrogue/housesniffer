@@ -2,6 +2,7 @@
 
 namespace App\Service\Crawler;
 
+use App\Service\HintService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -25,19 +26,16 @@ class Retriever
     /**
      * Fetch the house list information from idealista
      *
-     * @param string $name
+     * @param string $target
      * @param integer $page
      * @return string
      */
-    public function fetchList(string $name, int $page): string
+    public function fetchList(string $target, int $page): string
     {
-        $data = Yaml::parseFile(sprintf("config/hints/%s.yml", $name));
-        $mutator = $this->getMutator($data);
-        $data['query']['page'] = $page + $mutator;
-        $data['url'] = $this->prepareUrl($data['url'], $data['query']);
+        $data = HintService::parseHintsRequest($target, $page);
 
         return $this->cache->get(
-            sprintf('%s_%s', $name, $page),
+            sprintf('%s_%s', $target, $page),
             function (ItemInterface $item) use ($data): string {
                 $item->expiresAfter(3600 * 24);
 
@@ -53,25 +51,6 @@ class Retriever
         );
     }
 
-    /**
-     * Return the mutator for the url page, there are 2 mutators; position and
-     * index. Position is the default mutator. Index is less one unit relative
-     * to position.
-     *
-     * @param array<mixed> $data
-     * @return integer
-     */
-    private function getMutator(array $data): int
-    {
-        foreach ($data['parameters'] as $parameter) {
-            if ('index' == $parameter['schema']) {
-                return -1;
-            }
-        }
-
-        return 0;
-    }
-
     private function logResult(ResponseInterface $response): void
     {
         $info = $response->getInfo();
@@ -82,27 +61,5 @@ class Retriever
         $message .= "Ip {$info['primary_ip']}:{$info['primary_port']}";
 
         $this->logger->info($message);
-    }
-
-    /**
-     * Format data with real values
-     *
-     * @param string $url
-     * @param string[] $queryMap
-     * @return string
-     */
-    private function prepareUrl(string $url, array $queryMap): string
-    {
-        $query = '';
-        foreach ($queryMap as $key => $value) {
-            if (str_contains($url, "{{$key}}")) {
-                $url = preg_replace("/{($key)}/", $value, $url);
-                continue;
-            }
-
-            $query .= sprintf('&%s=%s', $key, $value);
-        }
-
-        return sprintf('%s?%s', $url, $query);
     }
 }
