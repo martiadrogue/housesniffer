@@ -55,7 +55,7 @@ class Retriever
 
     /**
      * Return the mutator for the url page, there are 2 mutators; position and
-     * index. Position is the default mutator. Index is less one unite relative
+     * index. Position is the default mutator. Index is less one unit relative
      * to position.
      *
      * @param array<mixed> $data
