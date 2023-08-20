@@ -55,12 +55,9 @@ class Operator
     public function secureResults(): void
     {
         $filesystem = new Filesystem();
-        $origin = self::CSV_TMP_PATH;
-        $origin .= sprintf('%s_%s.csv', $this->name, $this->id);
-        $target = self::CSV_PATH;
-        $target .= sprintf('%s_%s.csv', $this->name, $this->id);
+        $fileName = sprintf('%s_%s.csv', $this->name, $this->id);
 
-        $filesystem->rename($origin, $target);
+        $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $this->name);
     }
 
 
