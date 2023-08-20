@@ -62,7 +62,8 @@ class HintService
     private function getHintsRequest(int $currentPage): array
     {
         $data = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
-        $data['query']['page'] = $this->mutatePage($data, $currentPage);
+        $data['parameters'][0] = $this->mutatePage($data['parameters'][0], $currentPage);
+        $data = $this->fillGaps($data);
         $data['url'] = $this->prepareUrl($data['url'], $data['query']);
 
         return $data;
@@ -77,33 +78,47 @@ class HintService
      */
     private function prepareUrl(string $url, array $queryMap): string
     {
-        $query = '';
-        foreach ($queryMap as $key => $value) {
-            if (str_contains($url, "{{$key}}")) {
-                $url = preg_replace("/{($key)}/", $value, $url);
-                continue;
-            }
-
-            $query .= sprintf('&%s=%s', $key, $value);
-        }
+        $query = http_build_query($queryMap);
 
         return sprintf('%s?%s', $url, $query);
     }
 
     /**
-     * Return the mutator for the url page, there are 2 mutators; position and
+     * Return the mutator for the page's url, there are 2 mutators; position and
      * index. Position is the default mutator. Index is less one unit relative
      * to position.
      *
      * @param array<mixed> $data
      * @param integer $number
-     * @return integer
+     * @return array<mixed>
      */
-    private function mutatePage(array $data, int $number): int
+    private function mutatePage(array $data, int $number): array
     {
-        $mutatorSchema = $data['parameters']['schema'] ?? 'position';
-        $mutator = 'index' == $mutatorSchema ? -1 : 0;
+        $mutatorSchema = $data['schema'] ?? 'position';
+        $data['value'] = 'index' == $mutatorSchema ? -1 : 0;
+        $data['value'] += $number;
 
-        return $number + $mutator;
+        return $data;
+    }
+
+    /**
+     * Fill the gaps of the hints
+     *
+     * @param array<mixed> $data
+     * @return array<mixed>
+     */
+    private function fillGaps(array $data): array
+    {
+        foreach ($data['parameters'] as $parameter) {
+            $data['url'] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $data['url']);
+        }
+
+        foreach ($data['query'] as $key => $value) {
+            foreach ($data['parameters'] as $parameter) {
+                $data['query'][$key] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $value);
+            }
+        }
+
+        return $data;
     }
 }
