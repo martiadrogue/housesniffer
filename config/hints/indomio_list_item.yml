@@ -1,0 +1,15 @@
+---
+item: results
+fieldList:
+  reference: realEstate.id
+  url: seo.url
+  title: realEstate.title
+  price: realEstate.price.value
+  picture: realEstate.properties[0].photo.urls.small
+  rooms: realEstate.properties[0].rooms
+  size: realEstate.properties[0].surface
+  bathrooms: realEstate.properties[0].bathrooms
+  floor: realEstate.properties[0].floor.abbreviation
+page:
+  current: currentPage
+  total: maxPages
