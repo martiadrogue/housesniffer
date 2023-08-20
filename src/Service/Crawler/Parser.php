@@ -11,7 +11,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class Parser
 {
     private Operator $operator;
-    private Crawler $crawler;
     private Translation $translation;
 
     /**
@@ -21,10 +20,9 @@ class Parser
      */
     private array $pathMap;
 
-    public function __construct(string $stream, Operator $operator)
+    public function __construct(Operator $operator)
     {
         $this->operator = $operator;
-        $this->crawler = new Crawler($stream);
 
         $target = $this->operator->getTarget();
         $this->pathMap = HintService::parseHintsContent($target);
@@ -40,15 +38,14 @@ class Parser
      *
      * @return string[]
      */
-    public function parse(): array
+    public function parse(string $stream): array
     {
-        return $this->translation->parse($this->crawler, $this->pathMap);
+        return $this->translation->parse($stream, $this->pathMap);
     }
 
-    public function seekPage(int $currentPage): void
+    public function seekPage(string $stream, int $currentPage): void
     {
-        $hintList = explode('@', $this->pathMap['page']);
-        $pageList = $this->translation->seekPage($this->crawler, $hintList);
+        $pageList = $this->translation->seekPage($stream, $this->pathMap['page']);
 
         if (in_array($currentPage, $pageList)) {
             $this->operator->update();

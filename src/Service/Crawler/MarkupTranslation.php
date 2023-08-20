@@ -16,11 +16,11 @@ class MarkupTranslation implements Translation
         $this->logger = $logger;
     }
 
-    public function parse(Crawler $crawler, array $pathMap): array
+    public function parse(string $stream, array $pathMap): array
     {
-        return $crawler->filter($pathMap['item'])->each(function (Crawler $node, $index) use ($pathMap): array {
-            $nodeLink = $node->filter('.item-link');
+        $crawler = new Crawler($stream);
 
+        return $crawler->filter($pathMap['item'])->each(function (Crawler $node, $index) use ($pathMap): array {
             $item = [];
             foreach ($pathMap['fieldList'] as $key => $path) {
                 $hintList = explode('@', $path);
@@ -39,8 +39,11 @@ class MarkupTranslation implements Translation
         });
     }
 
-    public function seekPage(Crawler $crawler, array $hintList): array
+    public function seekPage(string $stream, array $hintList): array
     {
+        $crawler = new Crawler($stream);
+        $hintList = explode('@', $hintList['paginator']);
+
         return $crawler->filter($hintList[0])->reduce(
             function (Crawler $node, $index) use ($hintList): bool {
                 $value = $node->extract([$hintList[1]])[0] ?? '';

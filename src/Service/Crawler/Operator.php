@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Parser;
 use Symfony\Component\Uid\Uuid;
 use App\Service\Crawler\Retriever;
+use App\Service\Crawler\JsonTranslation;
 use App\Service\Crawler\MarkupTranslation;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Serializer;
@@ -39,14 +40,14 @@ class Operator
         $fileType = $this->solveContentType($stream);
         $translation = $this->buildTranslation($fileType);
 
-        $parser = new Parser($stream, $this);
+        $parser = new Parser($this);
         $parser->setTranslation($translation);
-        $data = $parser->parse();
+        $data = $parser->parse($stream);
 
         $this->persistData($data);
 
         $this->currentPageNumbe += 1;
-        $parser->seekPage($this->currentPageNumbe);
+        $parser->seekPage($stream, $this->currentPageNumbe);
     }
 
     public function setTarget(string $name): void
@@ -106,8 +107,12 @@ class Operator
 
     private function buildTranslation(string $fileType): Translation
     {
-        if ('' == $fileType) {
+        if ('html' == $fileType) {
             return new MarkupTranslation($this->logger);
+        }
+
+        if ('json' == $fileType) {
+            return new JsonTranslation($this->logger);
         }
 
         return new MarkupTranslation($this->logger);

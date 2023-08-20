@@ -45,7 +45,7 @@ class Retriever
                 ]);
                 $content = $response->getContent();
 
-                if ($data['error'] == $response->getStatusCode()) {
+                if (isset($data['error']) && $data['error'] == $response->getStatusCode()) {
                     throw new Exception('Response status code is different than expected.');
                 }
 

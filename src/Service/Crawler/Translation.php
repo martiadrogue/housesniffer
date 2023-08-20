@@ -10,18 +10,18 @@ interface Translation
     /**
      * Parse the stream of html to an array
      *
-     * @param Crawler $crawler
+     * @param string $stream
      * @param array<mixed> $pathMap
      * @return array<mixed>
      */
-    public function parse(Crawler $crawler, array $pathMap): array;
+    public function parse(string $stream, array $pathMap): array;
 
     /**
      * Get all visible pages
      *
-     * @param Crawler $crawler
+     * @param string $stream
      * @param array<mixed> $hintList
      * @return array<int>
      */
-    public function seekPage(Crawler $crawler, array $hintList): array;
+    public function seekPage(string $stream, array $hintList): array;
 }
