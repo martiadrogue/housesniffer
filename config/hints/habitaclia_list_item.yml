@@ -6,4 +6,5 @@ fieldList:
   title: .list-item-title a@title
   price: .list-item-price .font-2@_text@/[^\d]+/
   picture: .image img@src
-page: .pagination li@_text
+page:
+  paginator: .pagination li@_text

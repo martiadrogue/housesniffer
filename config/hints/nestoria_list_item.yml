@@ -9,4 +9,5 @@ fieldList:
   rooms: .summary-item.rooms span.rooms@_text@/[^\d]+/
   bathrooms: .summary-item.rooms span.bathrooms@_text@/[^\d]+/
   size: .summary-item.size span.size@_text@/[^\d]+/
-page: .pagination-bar .pagination__link@_text
+page:
+  paginator: .pagination-bar .pagination__link@_text
