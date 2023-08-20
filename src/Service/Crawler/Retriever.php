@@ -60,9 +60,11 @@ class Retriever
     {
         $info = $response->getInfo();
 
-        $message = "Response data: Time {$info['total_time']}, ";
-        $message .= "Size {$info['size_download']}, ";
-        $message .= "Speed {$info['speed_download']}, ";
+        $message = "Response data: Start Time {$info['start_time']}, ";
+        $message .= "Time {$info['total_time']}, ";
+        $message .= "Connect Time {$info['connect_time']}, ";
+        $message .= "Request Size {$info['request_size']}, ";
+        $message .= "Size Download {$info['size_download']}, ";
         $message .= "Ip {$info['primary_ip']}:{$info['primary_port']}";
 
         $this->logger->info($message);
