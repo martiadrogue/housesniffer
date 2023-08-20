@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Parser;
 use Symfony\Component\Uid\Uuid;
 use App\Service\Crawler\Retriever;
+use App\Service\Crawler\MarkupTranslation;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
@@ -34,8 +35,14 @@ class Operator
     public function update(): void
     {
         $stream = $this->retriever->fetchList($this->name, $this->currentPageNumbe);
-        $parser = new Parser($stream, $this, $this->logger);
+
+        $fileType = $this->solveContentType($stream);
+        $translation = $this->buildTranslation($fileType);
+
+        $parser = new Parser($stream, $this);
+        $parser->setTranslation($translation);
         $data = $parser->parse();
+
         $this->persistData($data);
 
         $this->currentPageNumbe += 1;
@@ -60,6 +67,20 @@ class Operator
         $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $this->name);
     }
 
+    private function solveContentType(string $stream): string
+    {
+        $firstChar = substr(ltrim($stream), 0, 1);
+
+        if ('<' == $firstChar) {
+            return 'html';
+        }
+
+        if (in_array($firstChar, ['{', '[', ])) {
+            return 'json';
+        }
+
+        return '';
+    }
 
     /**
      * Persit data in a file
@@ -81,5 +102,14 @@ class Operator
 
         $csv = $serializer->encode($data, 'csv', $context);
         $filesystem->appendToFile($fileName, $csv);
+    }
+
+    private function buildTranslation(string $fileType): Translation
+    {
+        if ('' == $fileType) {
+            return new MarkupTranslation($this->logger);
+        }
+
+        return new MarkupTranslation($this->logger);
     }
 }
