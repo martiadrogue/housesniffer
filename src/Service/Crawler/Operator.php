@@ -64,7 +64,7 @@ class Operator
         $filesystem = new Filesystem();
         $fileName = sprintf('%s_%s.csv', $this->name, $this->id);
 
-        $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $this->name);
+        $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
     }
 
     private function solveContentType(string $stream): string
