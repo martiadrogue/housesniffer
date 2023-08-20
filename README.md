@@ -9,7 +9,7 @@ This project will have basic configuration for [PHPUnit](https://github.com/seba
 with PSR-4 namespaces for source code and tests, `.gitignore` with basic files and directories to exclude them from Git, changelog file
 and README with cool  badges :)
 
-[![License badge](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md)
+[![License badge](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 ![Code Size](https://img.shields.io/github/languages/code-size/martiadrogue/housesniffer)
 ![Lines of code](https://img.shields.io/tokei/lines/github/martiadrogue/housesniffer)
 
