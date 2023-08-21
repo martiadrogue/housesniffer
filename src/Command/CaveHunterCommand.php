@@ -37,11 +37,32 @@ class CaveHunterCommand extends Command
             ->addArgument('target', InputArgument::REQUIRED, 'Target to hunt')
             ->addOption(
                 'mode',
-                null,
+                'm',
                 InputOption::VALUE_OPTIONAL,
                 'Way to hunt the data, `details` or `list`, `list` by default',
                 'list'
             )
+            ->addOption(
+                'delay',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Add delay to  confuse the target',
+                0
+            )
+            ->addOption(
+                'headers',
+                'hd',
+                InputOption::VALUE_OPTIONAL,
+                'Overwrite the headers',
+                0
+            )
+            ->addOption(
+                'disguise',
+                'dg',
+                InputOption::VALUE_NONE,
+                'Use a proxy to hide your identy'
+            )
+
         ;
     }
 
