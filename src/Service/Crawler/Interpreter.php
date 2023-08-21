@@ -5,7 +5,7 @@ namespace App\Service\Crawler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-interface Translation
+interface Interpreter
 {
     /**
      * Parse the stream of html to an array

@@ -5,13 +5,13 @@ namespace App\Service\Crawler;
 use App\Service\HintService;
 use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
-use App\Service\Crawler\Translation;
+use App\Service\Crawler\Interpreter;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Parser
 {
     private Operator $operator;
-    private Translation $translation;
+    private Interpreter $interpreter;
 
     /**
      * List path to the data to scrap
@@ -28,9 +28,9 @@ class Parser
         $this->pathMap = HintService::parseHintsContent($target);
     }
 
-    public function setTranslation(Translation $translation): void
+    public function setInterpreter(Interpreter $interpreter): void
     {
-        $this->translation = $translation;
+        $this->interpreter = $interpreter;
     }
 
     /**
@@ -40,12 +40,12 @@ class Parser
      */
     public function parse(string $stream): array
     {
-        return $this->translation->parse($stream, $this->pathMap);
+        return $this->interpreter->parse($stream, $this->pathMap);
     }
 
     public function seekPage(string $stream, int $currentPage): void
     {
-        $pageList = $this->translation->seekPage($stream, $this->pathMap['page']);
+        $pageList = $this->interpreter->seekPage($stream, $this->pathMap['page']);
 
         if (in_array($currentPage, $pageList)) {
             $this->operator->update();

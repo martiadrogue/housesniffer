@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Translation;
 use Symfony\Component\DomCrawler\Crawler;
 
-class JsonTranslation implements Translation
+class JsonInterpreter implements Interpreter
 {
     private LoggerInterface $logger;
 

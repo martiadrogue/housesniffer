@@ -6,8 +6,8 @@ use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Parser;
 use Symfony\Component\Uid\Uuid;
 use App\Service\Crawler\Retriever;
-use App\Service\Crawler\JsonTranslation;
-use App\Service\Crawler\MarkupTranslation;
+use App\Service\Crawler\JsonInterpreter;
+use App\Service\Crawler\MarkupInterpreter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
@@ -38,10 +38,10 @@ class Operator
         $stream = $this->retriever->fetchList($this->name, $this->currentPageNumbe);
 
         $fileType = $this->solveContentType($stream);
-        $translation = $this->buildTranslation($fileType);
+        $interpreter = $this->buildInterpreter($fileType);
 
         $parser = new Parser($this);
-        $parser->setTranslation($translation);
+        $parser->setInterpreter($interpreter);
         $data = $parser->parse($stream);
 
         $this->persistData($data);
@@ -105,16 +105,16 @@ class Operator
         $filesystem->appendToFile($fileName, $csv);
     }
 
-    private function buildTranslation(string $fileType): Translation
+    private function buildInterpreter(string $fileType): Interpreter
     {
         if ('html' == $fileType) {
-            return new MarkupTranslation($this->logger);
+            return new MarkupInterpreter($this->logger);
         }
 
         if ('json' == $fileType) {
-            return new JsonTranslation($this->logger);
+            return new JsonInterpreter($this->logger);
         }
 
-        return new MarkupTranslation($this->logger);
+        return new MarkupInterpreter($this->logger);
     }
 }
