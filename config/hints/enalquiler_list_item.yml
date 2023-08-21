@@ -1,0 +1,17 @@
+---
+item: .propertyCard
+fieldList:
+  - reference: "@list-item"
+  - url: .propertyCard__description--title@href
+  - title: .propertyCard__description--title@title
+  - price: .propertyCard__price--value@_text
+    sanitize: /[^\d]+/
+  - picture: .propertyCard__carousel img@srcset
+  - rooms: .propertyCard__details li:nth-child(2)@_text
+    sanitize: /[^\d]+/
+  - bathrooms: .propertyCard__details li:nth-child(3)@_text
+    sanitize: /[^\d]+/
+  - size: .propertyCard__details li:nth-child(1)@_text
+    sanitize: /[^\d]+/
+page:
+  paginator: .pagination li@_text

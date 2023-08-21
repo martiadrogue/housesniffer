@@ -22,12 +22,13 @@ class MarkupInterpreter implements Interpreter
 
         return $crawler->filter($pathMap['item'])->each(function (Crawler $node, $index) use ($pathMap): array {
             $item = [];
-            foreach ($pathMap['fieldList'] as $key => $path) {
-                $hintList = explode('@', $path);
+            foreach ($pathMap['fieldList'] as $path) {
+                $key = array_key_first($path);
+                $hintList = explode('@', $path[$key]);
                 $value = $node->filter($hintList[0])->extract([$hintList[1]])[0] ?? '';
 
-                if (isset($hintList[2])) {
-                    $value = preg_replace($hintList[2], '', $value);
+                if (isset($path['sanitize'])) {
+                    $value = preg_replace($path['sanitize'], '', $value);
                 }
 
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));

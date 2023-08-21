@@ -1,10 +1,11 @@
 ---
 item: .list-items .js-list-item
 fieldList:
-  reference: "@data-id"
-  url: "@data-href"
-  title: .list-item-title a@title
-  price: .list-item-price .font-2@_text@/[^\d]+/
-  picture: .image img@src
+  - reference: "@data-id"
+  - url: "@data-href"
+  - title: .list-item-title a@title
+  - price: .list-item-price .font-2@_text
+    sanitize: /[^\d]+/
+  - picture: .image img@src
 page:
   paginator: .pagination li@_text
