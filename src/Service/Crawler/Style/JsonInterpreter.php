@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Crawler;
+namespace App\Service\Crawler\Style;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;

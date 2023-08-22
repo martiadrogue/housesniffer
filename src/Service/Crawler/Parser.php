@@ -5,7 +5,7 @@ namespace App\Service\Crawler;
 use App\Service\HintService;
 use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
-use App\Service\Crawler\Interpreter;
+use App\Service\Crawler\Style\Interpreter;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Parser
