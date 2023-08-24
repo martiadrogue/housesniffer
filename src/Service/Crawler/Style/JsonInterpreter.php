@@ -33,7 +33,7 @@ class JsonInterpreter implements Interpreter
         }, \jmespath\search($pathMap['item'], $data));
     }
 
-    public function seekPage(string $stream, array $hintList): array
+    public function getPageList(string $stream, array $hintList): array
     {
         $data = json_decode($stream, true);
         $currentPage = \jmespath\search($hintList['current'], $data);

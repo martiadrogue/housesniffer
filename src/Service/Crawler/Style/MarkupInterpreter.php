@@ -40,7 +40,7 @@ class MarkupInterpreter implements Interpreter
         });
     }
 
-    public function seekPage(string $stream, array $hintList): array
+    public function getPageList(string $stream, array $hintList): array
     {
         $crawler = new Crawler($stream);
         $hintList = explode('@', $hintList['paginator']);

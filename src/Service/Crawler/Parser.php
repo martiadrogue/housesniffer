@@ -45,7 +45,7 @@ class Parser
 
     public function seekPage(string $stream, int $currentPage): void
     {
-        $pageList = $this->interpreter->seekPage($stream, $this->pathMap['page']);
+        $pageList = $this->interpreter->getPageList($stream, $this->pathMap['page']);
 
         if (in_array($currentPage, $pageList)) {
             $this->operator->update();
