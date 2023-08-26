@@ -2,17 +2,22 @@
 
 namespace App\Command;
 
-use App\Service\PerformanceService;
+use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
+use App\Service\PerformanceService;
+use App\Service\Pointer\HintConfiguration;
+use App\Service\Pointer\HintValidator;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 #[AsCommand(
     name: 'app:cave-hunter',
@@ -23,7 +28,7 @@ class CaveHunterCommand extends Command
     private PerformanceService $performanceTracker;
     private Operator $crawler;
 
-    public function __construct(PerformanceService $performanceTracker = null, Operator $crawler = null)
+    public function __construct(PerformanceService $performanceTracker, Operator $crawler)
     {
         $this->performanceTracker = $performanceTracker;
         $this->crawler = $crawler;
@@ -82,6 +87,9 @@ class CaveHunterCommand extends Command
         if ($input->getOption('mode')) {
             $io->note(sprintf('Your attack vector is from: %s', $mode));
         }
+
+        // !Validate zone
+        // do things ...
 
         // !TODO zone
         $name = sprintf('%s_%s', $target, $mode);

@@ -2,11 +2,12 @@
 
 namespace App\Service\Crawler;
 
-use App\Service\HintService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
-use App\Service\Crawler\Style\Interpreter;
+use App\Service\Pointer\HintService;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Service\Crawler\Style\Interpreter;
 
 class Parser
 {
@@ -20,12 +21,12 @@ class Parser
      */
     private array $pathMap;
 
-    public function __construct(Operator $operator)
+    public function __construct(Operator $operator, LoggerInterface $logger)
     {
         $this->operator = $operator;
 
         $target = $this->operator->getTarget();
-        $this->pathMap = HintService::parseHintsContent($target);
+        $this->pathMap = HintService::parseHintsContent($target, $logger);
     }
 
     public function setInterpreter(Interpreter $interpreter): void

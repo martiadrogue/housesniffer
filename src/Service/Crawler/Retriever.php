@@ -2,7 +2,7 @@
 
 namespace App\Service\Crawler;
 
-use App\Service\HintService;
+use App\Service\Pointer\HintService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -33,7 +33,7 @@ class Retriever
      */
     public function fetchList(string $target, int $page): string
     {
-        $data = HintService::parseHintsRequest($target, $page);
+        $data = HintService::parseHintsRequest($target, $page, $this->logger);
 
         return $this->cache->get(
             sprintf('%s_%s', $target, $page),

@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Pointer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
+use App\Service\Pointer\HintValidator;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class HintService
 {
     private const PATH = "config/hints/";
     private string $target;
+    private HintValidator $hintValidator;
 
-    public function __construct(string $target)
+    public function __construct(string $target, HintValidator $hintValidator)
     {
         $this->target = $target;
+        $this->hintValidator = $hintValidator;
     }
 
     /**
@@ -23,9 +26,10 @@ class HintService
      * @param integer $page
      * @return mixed[]
      */
-    public static function parseHintsRequest(string $target, int $page): array
+    public static function parseHintsRequest(string $target, int $page, LoggerInterface $logger): array
     {
-        $hints = new self($target);
+        $hintValidator = new HintValidator($logger);
+        $hints = new self($target, $hintValidator);
 
         return  $hints->getHintsRequest($page);
     }
@@ -36,9 +40,10 @@ class HintService
      * @param string $target
      * @return mixed[]
      */
-    public static function parseHintsContent(string $target): array
+    public static function parseHintsContent(string $target, LoggerInterface $logger): array
     {
-        $hints = new self($target);
+        $hintValidator = new HintValidator($logger);
+        $hints = new self($target, $hintValidator);
 
         return $hints->getHintsContent();
     }
@@ -50,7 +55,10 @@ class HintService
      */
     private function getHintsContent(): array
     {
-        return Yaml::parseFile(sprintf(self::PATH . "%s_item.yml", $this->target));
+        $data = Yaml::parseFile(sprintf(self::PATH . "%s_item.yml", $this->target));
+        $this->hintValidator->validate($this->target);
+
+        return $data;
     }
 
     /**
@@ -62,9 +70,13 @@ class HintService
     private function getHintsRequest(int $currentPage): array
     {
         $data = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
+        $this->hintValidator->validate($this->target);
+
         $data['parameters'][0] = $this->mutatePage($data['parameters'][0], $currentPage);
         $data = $this->fillGaps($data);
         $data['url'] = $this->prepareUrl($data['url'], $data['query']);
+
+
 
         return $data;
     }

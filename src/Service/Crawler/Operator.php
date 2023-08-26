@@ -41,7 +41,7 @@ class Operator
         $fileType = $this->solveContentType($stream);
         $interpreter = $this->buildInterpreter($fileType);
 
-        $parser = new Parser($this);
+        $parser = new Parser($this, $this->logger);
         $parser->setInterpreter($interpreter);
         $data = $parser->parse($stream);
 
