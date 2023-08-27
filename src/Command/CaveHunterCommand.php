@@ -79,9 +79,7 @@ class CaveHunterCommand extends Command
 
         // !Input zones
         $target = $input->getArgument('target');
-        if ($target) {
-            $io->note(sprintf('Your target is: %s', $target));
-        }
+        $io->note(sprintf('Your target is: %s', $target));
 
         $mode = $input->getOption('mode');
         if ($input->getOption('mode')) {
