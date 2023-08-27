@@ -51,21 +51,21 @@ class CaveHunterCommand extends Command
                 'delay',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Add delay to  confuse the target',
+                'Delay between requests in seconds',
                 0
             )
             ->addOption(
                 'headers',
                 'hd',
                 InputOption::VALUE_OPTIONAL,
-                'Overwrite the headers',
+                'Overwrite headers',
                 0
             )
             ->addOption(
-                'disguise',
-                'dg',
+                'proxy',
+                'p',
                 InputOption::VALUE_NONE,
-                'Use a proxy to hide your identy'
+                'Proxy to hide your identy'
             )
 
         ;
