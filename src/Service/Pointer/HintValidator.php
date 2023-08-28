@@ -9,8 +9,6 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GroupSequence;
-use Symfony\Component\Validator\Mapping\Loader\YamlFileLoader;
-use Symfony\Component\Validator\Mapping\Loader\YamlFilesLoader;
 
 class HintValidator
 {
