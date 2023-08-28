@@ -46,7 +46,7 @@ class Operator
         $data = $parser->parse($stream);
 
         $this->persistData($data);
-        $data = null;
+        unset($data);
 
         $this->currentPageNumbe += 1;
         $parser->seekPage($stream, $this->currentPageNumbe);
