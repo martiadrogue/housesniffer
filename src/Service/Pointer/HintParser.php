@@ -9,7 +9,12 @@ class HintParser
 {
     private string $target;
     private int $page;
-    private array $hintSet;
+    /**
+     * Hints to parse to content
+     *
+     * @var mixed[]
+     */
+    private array $hintMap;
     private HintMiddleware $middleware;
     private Method $tactic;
 

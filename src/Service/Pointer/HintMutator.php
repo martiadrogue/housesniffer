@@ -8,7 +8,6 @@ use App\Service\Pointer\HintMiddleware;
 class HintMutator extends HintMiddleware
 {
     private Method $tactic;
-    private const PATH = "config/hints/";
     private string $target;
 
     public function __construct(Method $tactic, string $target)

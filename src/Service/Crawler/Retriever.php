@@ -2,6 +2,7 @@
 
 namespace App\Service\Crawler;
 
+use App\Service\Pointer\HintParser;
 use App\Service\Pointer\HintService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;

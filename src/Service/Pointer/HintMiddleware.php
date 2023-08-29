@@ -2,9 +2,11 @@
 
 namespace App\Service\Pointer;
 
+use App\Service\Pointer\HintMiddleware;
+
 abstract class HintMiddleware
 {
-    private $next;
+    private HintMiddleware $next;
 
     public function linkWith(HintMiddleware $next): HintMiddleware
     {

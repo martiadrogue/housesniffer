@@ -9,7 +9,7 @@ class HintValidator extends HintMiddleware
 {
     private Evaluation $tactic;
     private string $target;
-    private const PATH = "config/hints/";
+    private bool $isUnknown;
 
     public function __construct(Evaluation $tactic, string $target)
     {

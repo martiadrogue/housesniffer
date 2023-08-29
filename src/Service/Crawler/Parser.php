@@ -2,11 +2,8 @@
 
 namespace App\Service\Crawler;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Operator;
-use App\Service\Pointer\HintService;
-use Symfony\Component\DomCrawler\Crawler;
+use App\Service\Pointer\HintParser;
 use App\Service\Crawler\Style\Interpreter;
 
 class Parser

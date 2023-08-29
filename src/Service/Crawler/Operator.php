@@ -4,13 +4,14 @@ namespace App\Service\Crawler;
 
 use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Parser;
-use Symfony\Component\Uid\Uuid;
 use App\Service\Crawler\Retriever;
+use App\Service\Pointer\HintService;
+use App\Service\Pointer\HintParser;
 use App\Service\Crawler\Style\Interpreter;
-use App\Service\Crawler\Style\JsonInterpreter;
-use App\Service\Crawler\Style\MarkupInterpreter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Serializer;
+use App\Service\Crawler\Style\JsonInterpreter;
+use App\Service\Crawler\Style\MarkupInterpreter;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
