@@ -11,6 +11,7 @@ fieldList:
     sanitize: /[^\d]+/
   - size: .item-detail:nth-child(2)@_text
     sanitize: /[^\d]+/
+  - bathrooms:
   - floor: .item-detail:nth-child(3)@_text
 page:
   paginator: .pagination li@_text

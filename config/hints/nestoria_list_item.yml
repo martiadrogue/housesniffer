@@ -9,9 +9,10 @@ fieldList:
   - picture: .listing_list__cover img.desktopImg@data-lazy
   - rooms: .summary-item.rooms span.rooms@_text
     sanitize: /[^\d]+/
-  - bathrooms: .summary-item.rooms span.bathrooms@_text
-    sanitize: /[^\d]+/
   - size: .summary-item.size span.size@_text
     sanitize: /[^\d]+/
+  - bathrooms: .summary-item.rooms span.bathrooms@_text
+    sanitize: /[^\d]+/
+  - floor:
 page:
   paginator: .pagination-bar .pagination__link@_text

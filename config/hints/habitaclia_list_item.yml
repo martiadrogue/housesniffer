@@ -7,5 +7,10 @@ fieldList:
   - price: .list-item-price .font-2@_text
     sanitize: /[^\d]+/
   - picture: .image img@src
+  - rooms:
+  - size:
+  - bathrooms:
+  - floor:
+
 page:
   paginator: .pagination li@_text
