@@ -18,17 +18,23 @@ class HintValidator extends HintMiddleware
         $this->isUnknown = true;
     }
 
-    public function check(array $hintSet): array
+    public function check(array $hintMap): array
     {
         if ($this->isUnknown) {
-            $this->isUnknown = !$this->validate($hintSet);
+            $this->isUnknown = !$this->validate($hintMap);
         }
 
-        return parent::check($hintSet);
+        return parent::check($hintMap);
     }
 
-    private function validate(array $hintSet): bool
+    /**
+     * Look for violations
+     *
+     * @param mixed[] $hintMap
+     * @return boolean
+     */
+    private function validate(array $hintMap): bool
     {
-        return $this->tactic->process($hintSet, $this->target);
+        return $this->tactic->process($hintMap, $this->target);
     }
 }

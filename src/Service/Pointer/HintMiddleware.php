@@ -15,12 +15,18 @@ abstract class HintMiddleware
         return $next;
     }
 
-    public function check(array $hintSet): array
+    /**
+     * Perform an operation involving $hintMap
+     *
+     * @param mixed[] $hintMap
+     * @return mixed[]
+     */
+    public function check(array $hintMap): array
     {
-        if (!$this->next) {
-            return $hintSet;
+        if (empty($this->next)) {
+            return $hintMap;
         }
 
-        return $this->next->check($hintSet);
+        return $this->next->check($hintMap);
     }
 }

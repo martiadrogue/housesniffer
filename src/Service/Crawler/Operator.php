@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class Operator
 {
-    private string $name;
+    private string $target;
     private Retriever $retriever;
     private LoggerInterface $logger;
     private int $currentPageNumbe;
@@ -53,20 +53,22 @@ class Operator
         $parser->seekPage($stream, $this->currentPageNumbe);
     }
 
-    public function setTarget(string $name): void
+    public function loadHints(string $target): void
     {
-        $this->name = $name;
+        $this->target = $target;
+        $this->hintRequestProvider = HintService::parseHintsRequest($target, $this->logger);
+        $this->hintContentProvider = HintService::parseHintsContent($target, $this->logger);
     }
 
     public function getTarget(): string
     {
-        return $this->name;
+        return $this->target;
     }
 
     public function secureResults(): void
     {
         $filesystem = new Filesystem();
-        $fileName = sprintf('%s_%s.csv', $this->name, $this->id);
+        $fileName = sprintf('%s_%s.csv', $this->target, $this->id);
 
         $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
     }
@@ -98,7 +100,7 @@ class Operator
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $filesystem = new Filesystem();
         $fileName = self::CSV_TMP_PATH;
-        $fileName .= sprintf('%s_%s.csv', $this->name, $this->id);
+        $fileName .= sprintf('%s_%s.csv', $this->target, $this->id);
 
         if ($filesystem->exists($fileName)) {
             $context['no_headers'] = true;/*  */

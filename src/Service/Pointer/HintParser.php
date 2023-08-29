@@ -22,7 +22,7 @@ class HintParser
     {
         $this->tactic = $tactic;
         $this->target = $target;
-        $this->hintSet = [];
+        $this->hintMap = [];
     }
 
     public function setMiddleware(HintMiddleware $middleware): void
@@ -47,10 +47,10 @@ class HintParser
      */
     public function parse(): array
     {
-        if (!$this->hintSet) {
-            $this->hintSet = $this->tactic->process($this->hintSet, $this->target);
+        if (!$this->hintMap) {
+            $this->hintMap = $this->tactic->process($this->hintMap, $this->target);
         }
 
-        return $this->middleware->check($this->hintSet);
+        return $this->middleware->check($this->hintMap);
     }
 }
