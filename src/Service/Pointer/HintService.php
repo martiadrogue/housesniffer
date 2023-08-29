@@ -4,19 +4,30 @@ namespace App\Service\Pointer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
+use App\Service\Pointer\HintParser;
+use App\Service\Pointer\HintMutator;
 use App\Service\Pointer\HintValidator;
+use App\Service\Pointer\HintMiddleware;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\Stopwatch\Stopwatch;
+use App\Service\Pointer\Style\ContentParser;
+use App\Service\Pointer\Style\RequestParser;
+use App\Service\Pointer\Style\ContentMutator;
+use App\Service\Pointer\Style\RequestMutator;
+use App\Service\Pointer\Style\ContentValidator;
+use App\Service\Pointer\Style\RequestValidator;
 
 class HintService
 {
     private const PATH = "config/hints/";
     private string $target;
     private HintValidator $hintValidator;
+    private HintMiddleware $hintMiddleware;
 
-    public function __construct(string $target, HintValidator $hintValidator)
+    public function __construct(string $target, HintMiddleware $hintMiddleware)
     {
         $this->target = $target;
-        $this->hintValidator = $hintValidator;
+        $this->hintMiddleware = $hintMiddleware;
     }
 
     /**
@@ -26,12 +37,18 @@ class HintService
      * @param integer $page
      * @return mixed[]
      */
-    public static function parseHintsRequest(string $target, int $page, LoggerInterface $logger): array
+    public static function parseHintsRequest(string $target, LoggerInterface $logger): HintParser
     {
-        $hintValidator = new HintValidator($logger);
-        $hints = new self($target, $hintValidator);
+        $styleParser = new RequestParser();
+        $styleValidator = new RequestValidator($logger);
+        $server = new HintParser($styleParser, $target);
+        $styleMutator = new RequestMutator($server);
 
-        return  $hints->getHintsRequest($page);
+        $hintMiddleware = new HintValidator($styleValidator, $target);
+        $hintMiddleware->linkWith(new HintMutator($styleMutator, $target));
+        $server->setMiddleware($hintMiddleware);
+
+        return $server;
     }
 
     /**
@@ -40,97 +57,17 @@ class HintService
      * @param string $target
      * @return mixed[]
      */
-    public static function parseHintsContent(string $target, LoggerInterface $logger): array
+    public static function parseHintsContent(string $target, LoggerInterface $logger): HintParser
     {
-        $hintValidator = new HintValidator($logger);
-        $hints = new self($target, $hintValidator);
+        $styleParser = new ContentParser();
+        $styleValidator = new ContentValidator($logger);
+        $styleMutator = new ContentMutator();
 
-        return $hints->getHintsContent();
-    }
+        $server = new HintParser($styleParser, $target);
+        $hintMiddleware = new HintValidator($styleValidator, $target);
+        $hintMiddleware->linkWith(new HintMutator($styleMutator, $target));
+        $server->setMiddleware($hintMiddleware);
 
-    /**
-     * Get hints for content
-     *
-     * @return mixed[]
-     */
-    private function getHintsContent(): array
-    {
-        $data = Yaml::parseFile(sprintf(self::PATH . "%s_item.yml", $this->target));
-        $this->hintValidator->validate($this->target);
-
-        return $data;
-    }
-
-    /**
-     * Get hints for requests
-     *
-     * @param integer $currentPage
-     * @return mixed[]
-     */
-    private function getHintsRequest(int $currentPage): array
-    {
-        $data = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
-        $this->hintValidator->validate($this->target);
-
-        $data['parameters'][0] = $this->mutatePage($data['parameters'][0], $currentPage);
-        $data = $this->fillGaps($data);
-        $data['url'] = $this->prepareUrl($data['url'], $data['query']);
-
-
-
-        return $data;
-    }
-
-    /**
-     * Format data with real values
-     *
-     * @param string $url
-     * @param string[] $queryMap
-     * @return string
-     */
-    private function prepareUrl(string $url, array $queryMap): string
-    {
-        $query = http_build_query($queryMap);
-
-        return sprintf('%s?%s', $url, $query);
-    }
-
-    /**
-     * Return the mutator for the page's url, there are 2 mutators; position and
-     * index. Position is the default mutator. Index is less one unit relative
-     * to position.
-     *
-     * @param array<mixed> $data
-     * @param integer $number
-     * @return array<mixed>
-     */
-    private function mutatePage(array $data, int $number): array
-    {
-        $mutatorSchema = $data['schema'] ?? 'position';
-        $data['value'] = 'index' == $mutatorSchema ? -1 : 0;
-        $data['value'] += $number;
-
-        return $data;
-    }
-
-    /**
-     * Fill the gaps of the hints
-     *
-     * @param array<mixed> $data
-     * @return array<mixed>
-     */
-    private function fillGaps(array $data): array
-    {
-        foreach ($data['parameters'] as $parameter) {
-            $data['url'] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $data['url']);
-        }
-
-        foreach ($data['query'] as $key => $value) {
-            foreach ($data['parameters'] as $parameter) {
-                $data['query'][$key] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $value);
-            }
-        }
-
-        return $data;
+        return $server;
     }
 }
