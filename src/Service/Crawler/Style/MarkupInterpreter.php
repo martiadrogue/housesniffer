@@ -24,6 +24,10 @@ class MarkupInterpreter implements Interpreter
             $item = [];
             foreach ($pathMap['fieldList'] as $path) {
                 $key = array_key_first($path);
+                if (empty($path[$key])) {
+                    continue;
+                }
+
                 $hintList = explode('@', $path[$key]);
                 $value = $node->filter($hintList[0])->extract([$hintList[1]])[0] ?? '';
 

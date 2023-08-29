@@ -22,8 +22,9 @@ class JsonInterpreter implements Interpreter
 
         return array_map(function ($element) use ($pathMap): array {
             $item = [];
-            foreach ($pathMap['fieldList'] as $key => $path) {
-                $value = \jmespath\search($path, $element) ?? '';
+            foreach ($pathMap['fieldList'] as $path) {
+                $key = array_key_first($path);
+                $value = \jmespath\search($path[$key], $element) ?? '';
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));
             }
 
