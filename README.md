@@ -48,6 +48,7 @@ Next Steps
  - store incomplete data to another place
  - fetch pdp of incomplete data
  - group delay, headers and proxy in a same object of request toolkit
+ - reword app base on observer pattern, event driven
 
 ## License
 
