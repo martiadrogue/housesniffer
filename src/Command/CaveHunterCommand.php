@@ -90,8 +90,8 @@ class CaveHunterCommand extends Command
         // do things ...
 
         // !TODO zone
-        $name = sprintf('%s_%s', $target, $mode);
-        $this->crawler->setTarget($name);
+        $target = sprintf('%s_%s', $target, $mode);
+        $this->crawler->loadHints($target);
         $this->crawler->update();
         $this->crawler->secureResults();
 
