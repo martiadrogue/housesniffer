@@ -20,8 +20,10 @@ class Operator
     private string $target;
     private Retriever $retriever;
     private LoggerInterface $logger;
-    private int $currentPageNumbe;
-    private Uuid $id;
+    private HintParser $hintRequestProvider;
+    private HintParser $hintContentProvider;
+    private int $currentPage;
+    private int $id;
 
     private const CSV_TMP_PATH = 'var/tmp/csv/';
     private const CSV_PATH = 'var/csv/';
@@ -30,27 +32,28 @@ class Operator
     {
         $this->retriever = $retriever;
         $this->logger = $logger;
-        $this->id = Uuid::v4();
-
-        $this->currentPageNumbe = 1;
+        $this->id = \time();
+        $this->currentPage = 1;
     }
 
     public function update(): void
     {
-        $stream = $this->retriever->fetchList($this->name, $this->currentPageNumbe);
+        $this->hintRequestProvider->setPage($this->currentPage);
+        $stream = $this->retriever->fetchList($this->hintRequestProvider);
 
         $fileType = $this->solveContentType($stream);
         $interpreter = $this->buildInterpreter($fileType);
 
-        $parser = new Parser($this, $this->logger);
+        $parser = new Parser($this, $this->hintContentProvider);
         $parser->setInterpreter($interpreter);
+
         $data = $parser->parse($stream);
 
         $this->persistData($data);
         unset($data);
 
-        $this->currentPageNumbe += 1;
-        $parser->seekPage($stream, $this->currentPageNumbe);
+        $this->currentPage += 1;
+        $parser->seekPage($stream, $this->currentPage);
     }
 
     public function loadHints(string $target): void

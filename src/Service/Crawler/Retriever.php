@@ -23,30 +23,30 @@ class Retriever
         $this->client = $client;
         $this->cache = $cache;
         $this->logger = $logger;
+        // TODO: we have to get a hintservice here
     }
 
     /**
      * Fetch the house list information from idealista
      *
-     * @param string $target
-     * @param integer $page
+     * @param HintParser $hintProcesor
      * @return string
      */
-    public function fetchList(string $target, int $page): string
+    public function fetchList(HintParser $hintProcesor): string
     {
-        $data = HintService::parseHintsRequest($target, $page, $this->logger);
-
+        // TODO: mutator have to be initiated here. But, hint service have to be already working
+        $hintMap = $hintProcesor->parse();
         return $this->cache->get(
-            sprintf('%s_%s', $target, $page),
-            function (ItemInterface $item) use ($data): string {
+            sprintf('%s_%s', $hintMap['method'], $hintMap['url']),
+            function (ItemInterface $item) use ($hintMap): string {
                 $item->expiresAfter(3600 * 24);
 
-                $response = $this->client->request($data['method'], $data['url'], [
-                    'headers' => $data['headers'],
+                $response = $this->client->request($hintMap['method'], $hintMap['url'], [
+                    'headers' => $hintMap['headers'],
                 ]);
                 $content = $response->getContent();
 
-                if (isset($data['error']) && $data['error'] == $response->getStatusCode()) {
+                if (isset($hintMap['error']) && $hintMap['error'] == $response->getStatusCode()) {
                     throw new Exception('Response status code is different than expected.');
                 }
 

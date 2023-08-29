@@ -18,12 +18,11 @@ class Parser
      */
     private array $pathMap;
 
-    public function __construct(Operator $operator, LoggerInterface $logger)
+    public function __construct(Operator $operator, HintParser $hintProvider)
     {
         $this->operator = $operator;
 
-        $target = $this->operator->getTarget();
-        $this->pathMap = HintService::parseHintsContent($target, $logger);
+        $this->pathMap = $hintProvider->parse();
     }
 
     public function setInterpreter(Interpreter $interpreter): void
