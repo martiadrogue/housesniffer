@@ -47,13 +47,12 @@ List of feeds to scrap
 
 Next Steps
 
- - parse json/html/xml/csv
  - allow custom headers from command
  - allow delay time from command
  - allow proxy from command
- - use a scheme model to parse data
  - store incomplete data to another place
  - fetch pdp of incomplete data
+ - group delay, headers and proxy in a same object of request toolkit
 
 ## License
 
