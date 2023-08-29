@@ -50,6 +50,37 @@ Next Steps
  - group delay, headers and proxy in a same object of request toolkit
  - reword app base on observer pattern, event driven
 
+## NOTES
+
+Goal is to discover new items, and have te current ones up to date
+Each site works differently (idealista filter recientes means last ads, while
+relevancia means one ad new one ad updated)
+Not all information is available in the feed
+There are 2 tipes of information: critical and complimentary
+Cirital data are ups and downs of price, it's open or sell
+complentary data that are important but don't change. So, there isn't an
+inminent necessity to have it, and having this data up to date is less important than anything
+
+steps app
+ - vaildate instructions
+ - request data
+ - parse data
+
+steps instructions
+ - parse instructions
+ - validate instructions
+ - mutate instructions
+
+steps request
+ - call request
+ - return data
+ - check for more requests
+ - do it again
+
+steps for parsing data
+ - search keys
+ - parse data
+
 ## License
 
 This project is released under the MIT license [license](LICENSE).
