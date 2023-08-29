@@ -33,16 +33,11 @@ $ bin/console app:cave-hunter <name_of_target>
 
 List of feeds to scrap
 
- - https://www.indomio.es/alquiler-casas/barcelona-capital/?criterio=dataModifica&ordine=desc
-   https://www.indomio.es/api-next/search-list/real-estates/?fkRegione=es-09&idProvincia=es-09-08&idComune=1731&idNazione=S&idContratto=2&idCategoria=1&criterio=dataModifica&ordine=desc&__lang=es&pag=4&paramsCount=3&path=/alquiler-casas/barcelona-capital/
- - https://www.nestoria.es/barcelona/casa/alquiler?sort=newest
- - https://enalquiler.com/search?provincia=9&poblacion=4596&order_field=1
  - https://www.tucasa.com/compra-venta/viviendas/barcelona/barcelona/?r=&idz=0008.0001.9999.0001
  - https://www.yaencontre.com/alquiler/pisos/barcelona
- - https://www.habitaclia.com/alquiler-barcelona.htm
  - https://www.pisos.com/alquiler/pisos-barcelona_capital/fecharecientedesde-desc/
  - https://www.fotocasa.es/es/comprar/viviendas/barcelona-capital/todas-las-zonas/l
-   https://web.gw.fotocasa.es/v2/propertysearch/search?combinedLocationIds=724,9,8,232,376,8019,0,0,0&culture=es-ES&includePurchaseTypeFacets=true&isMap=false&isNewConstructionPromotions=false&latitude=41.3854&longitude=2.17754&pageNumber=2&platformId=1&propertyTypeId=2&sortOrderDesc=true&sortType=publicationDate&transactionTypeId=1
+   https://web.gw.fotocasa.es/v2/propertysearch/search?combinedLocationIds=724,9,8,232,376,8019,0,0,0&culture=es-ES&includePurchaseTypeFacets=true&isMap=false&isNewConstructionPromotions=false&latitude=41.3854&longitude=2.17754&pageNumber=3&platformId=1&propertyTypeId=2&sortOrderDesc=false&sortType=price&transactionTypeId=1
  - https://www.zillow.com/new-york-ny/
 
 Next Steps
