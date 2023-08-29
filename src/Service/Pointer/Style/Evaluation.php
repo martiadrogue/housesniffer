@@ -8,10 +8,11 @@ use Symfony\Component\DomCrawler\Crawler;
 interface Evaluation
 {
     /**
-     * Parse the stream of html to an array
+     * Parse the stream of content to an array
      *
-     * @param array<mixed> $hintSet
-     * @return array<mixed>
+     * @param mixed[] $hintSet
+     * @param string $target
+     * @return boolean
      */
     public function process(array $hintSet, string $target): bool;
 }

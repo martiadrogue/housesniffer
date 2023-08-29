@@ -41,7 +41,8 @@ class HintService
      * Return hints for the content
      *
      * @param string $target
-     * @return mixed[]
+     * @param LoggerInterface $logger
+     * @return HintParser
      */
     public static function parseHintsContent(string $target, LoggerInterface $logger): HintParser
     {
