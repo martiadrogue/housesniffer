@@ -62,7 +62,13 @@ class ContentValidator implements Evaluation
         ]);
     }
 
-    private function getCollectionList($fieldList): array
+    /**
+     * Return a collection for all fields
+     *
+     * @param mixed[] $fieldList
+     * @return mixed[]
+     */
+    private function getCollectionList(array $fieldList): array
     {
         return array_fill_keys($fieldList, new Constraints\Collection([
             'path' => new Constraints\Optional([
