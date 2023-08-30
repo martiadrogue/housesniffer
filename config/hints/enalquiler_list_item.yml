@@ -1,18 +1,40 @@
 ---
-item: .propertyCard
+item:
+  path: .propertyCard
 fieldList:
-  - reference: "@list-item"
-  - url: .propertyCard__description--title@href
-  - title: .propertyCard__description--title@title
-  - price: .propertyCard__price--value@_text
-    sanitize: /[^\d]+/
-  - picture: .propertyCard__carousel img@srcset
-  - rooms: .propertyCard__details li:nth-child(2)@_text
-    sanitize: /[^\d]+/
-  - size: .propertyCard__details li:nth-child(1)@_text
-    sanitize: /[^\d]+/
-  - bathrooms: .propertyCard__details li:nth-child(3)@_text
-    sanitize: /[^\d]+/
-  - floor:
+  reference:
+    path:
+    source: list-item
+  url:
+    path: .propertyCard__description--title
+    source: href
+  title:
+    path: .propertyCard__description--title
+    source: title
+  price:
+    path: .propertyCard__price--value
+    source: _text
+    purge: /[^\d]+/
+  picture:
+    path: .propertyCard__carousel img
+    source: srcset
+  rooms:
+    path: .propertyCard__details li:nth-child(2)
+    source: _text
+    purge: /[^\d]+/
+  size:
+    path: .propertyCard__details li:nth-child(1)
+    source: _text
+    purge: /[^\d]+/
+  bathrooms:
+    path: .propertyCard__details li:nth-child(3)
+    source: _text
+    purge: /[^\d]+/
+  floor:
 page:
-  paginator: .pagination li@_text
+  paginator:
+    path: .pagination li
+    source: _text
+  total_items:
+  current:
+  total:

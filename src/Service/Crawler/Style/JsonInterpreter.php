@@ -16,42 +16,44 @@ class JsonInterpreter implements Interpreter
         $this->logger = $logger;
     }
 
-    public function parse(string $stream, array $pathMap): array
+    public function parse(string $stream, array $hintList): array
     {
-        $data = json_decode($stream, true);
-
-        return array_map(function ($element) use ($pathMap): array {
+        $dataMap = json_decode($stream, true);
+        return array_map(function ($element) use ($hintList): array {
             $item = [];
-            foreach ($pathMap['fieldList'] as $path) {
-                $key = array_key_first($path);
-                $value = $this->searchPath($path[$key], $element);
+            foreach ($hintList['fieldList'] as $key => $field) {
+                if (empty($field)) {
+                    continue;
+                }
+
+                $value = $this->searchPath($element, $field) ?? '';
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
 
             return $item;
-        }, $this->searchPath($pathMap['item'], $data));
+        }, $this->searchPath($dataMap, $hintList['item']));
     }
 
     public function getPageList(string $stream, array $hintList): array
     {
-        $data = json_decode($stream, true);
-        $currentPage = intval($this->searchPath($hintList['current'], $data));
-        $totalPages = intval($this->searchPath($hintList['total'], $data));
+        $dataMap = json_decode($stream, true);
+        $currentPage = intval($this->searchPath($dataMap, $hintList['current']));
+        $totalPages = intval($this->searchPath($dataMap, $hintList['total']));
 
         return range($currentPage, $totalPages);
     }
 
     /**
-     * Undocumented function
+     * Get content from given path
      *
-     * @param string $path
      * @param mixed[] $element
+     * @param mixed[] $path
      * @return mixed
      */
-    private function searchPath(string $path, array $element): mixed
+    private function searchPath(array $element, array $field): mixed
     {
-        return \jmespath\search($path, $element);
+        return \jmespath\search($field['path'], $element);
     }
 }

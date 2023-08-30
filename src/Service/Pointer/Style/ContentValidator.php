@@ -34,115 +34,47 @@ class ContentValidator implements Evaluation
             throw new ParseException('The data file is not valid according to the model file.');
         }
 
-        $this->logger->notice("YAML syntax for the Content of {$target} is valid.");
+        $this->logger->notice("YAML syntax for the Content of {$target}_item is valid.");
 
         return true;
     }
 
-    public function buildConstraintMap(): Collection
+    private function buildConstraintMap(): Collection
     {
+        $itemList = [ 'reference','url', 'title', 'price', 'picture', 'rooms', 'size', 'bathrooms', 'floor', ];
+        $pageList = [ 'paginator','total_items', 'current', 'total', ];
+        $collectionItemList = $this->getCollectionList($itemList);
+        $collectionPageList = $this->getCollectionList($pageList);
+
         return new Collection([
             'allowExtraFields' => true,
             'allowMissingFields' => true,
             'fields' => [
-                'item' =>  [
-                    new Constraints\NotBlank(),
-                    new Constraints\Type(['type' => 'string']),
-                ],
-                'fieldList' => new Collection([
-                    new Collection([
-                        'reference' => [
-                            new Constraints\NotBlank(),
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'url' => [
-                            new Constraints\NotBlank(),
-                            new Constraints\Type(['type' => 'string']),
-                            ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'title' => [
-                            new Constraints\NotBlank(),
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'price' => [
-                            new Constraints\NotBlank(),
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'picture' => [
-                            new Constraints\Type('string'),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'rooms' => [
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'size' => [
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'bathrooms' => [
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
-                    new Collection([
-                        'floor' => [
-                            new Constraints\Type(['type' => 'string']),
-                        ],
-                        'sanitize' => new Constraints\Optional([
-                            new Constraints\Type(['type' => 'string']),
-                        ])
-                    ]),
+                'item' => new Constraints\Collection([
+                    'path' => [
+                        new Constraints\NotBlank(),
+                        new Constraints\Type(['type' => 'string']),
+                    ],
                 ]),
-                'page' =>  new Collection([
-                    'paginator' => new Constraints\Optional([
-                        new Constraints\Type(['type' => 'string']),
-                    ]),
-                    'total_items' => new Constraints\Optional([
-                        new Constraints\Type(['type' => 'string']),
-                    ]),
-                    'current' => new Constraints\Optional([
-                        new Constraints\Type(['type' => 'string']),
-                    ]),
-                    'total' => new Constraints\Optional([
-                        new Constraints\Type(['type' => 'string']),
-                    ]),
-                ]),
+                'fieldList' => new Collection($collectionItemList),
+                'page' =>  new Collection($collectionPageList),
             ]
         ]);
+    }
+
+    private function getCollectionList($fieldList): array
+    {
+        return array_fill_keys($fieldList, new Constraints\Collection([
+            'path' => new Constraints\Optional([
+                new Constraints\Type(['type' => 'string']),
+            ]),
+            'source' => new Constraints\Optional([
+                new Constraints\Type(['type' => 'string']),
+            ]),
+            'purge' => new Constraints\Optional([
+                new Constraints\Type(['type' => 'string']),
+            ]),
+        ]));
     }
 
     /**

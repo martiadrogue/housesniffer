@@ -16,23 +16,21 @@ class MarkupInterpreter implements Interpreter
         $this->logger = $logger;
     }
 
-    public function parse(string $stream, array $pathMap): array
+    public function parse(string $stream, array $hintList): array
     {
         $crawler = new Crawler($stream);
 
-        return $crawler->filter($pathMap['item'])->each(function (Crawler $node, $index) use ($pathMap): array {
+        return $crawler->filter($hintList['item']['path'])->each(function (Crawler $node, $index) use ($hintList): array {
             $item = [];
-            foreach ($pathMap['fieldList'] as $path) {
-                $key = array_key_first($path);
-                if (empty($path[$key])) {
+            foreach ($hintList['fieldList'] as $key => $field) {
+                if (empty($field)) {
                     continue;
                 }
 
-                $hintList = explode('@', $path[$key]);
-                $value = $node->filter($hintList[0])->extract([$hintList[1]])[0] ?? '';
+                $value = $this->searchPath($node, $field);
 
-                if (isset($path['sanitize'])) {
-                    $value = preg_replace($path['sanitize'], '', $value);
+                if (isset($field['purge'])) {
+                    $value = preg_replace($field['purge'], '', $value);
                 }
 
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));
@@ -47,20 +45,28 @@ class MarkupInterpreter implements Interpreter
     public function getPageList(string $stream, array $hintList): array
     {
         $crawler = new Crawler($stream);
-        $hintList = explode('@', $hintList['paginator']);
-
-        return $crawler->filter($hintList[0])->reduce(
-            function (Crawler $node, $index) use ($hintList): bool {
-                $value = $node->extract([$hintList[1]])[0] ?? '';
+        $paginator = $hintList['paginator'];
+        return $crawler->filter($paginator['path'])->reduce(
+            function (Crawler $node, $index) use ($paginator): bool {
+                $value = $node->extract([$paginator['source']])[0] ?? '';
                 if (is_numeric($value)) {
                     return true;
                 }
 
                 return false;
             }
-        )->each(function (Crawler $node, $index) use ($hintList): int {
+        )->each(function (Crawler $node, $index) use ($paginator): int {
 
-            return (int) $node->extract([$hintList[1]])[0];
+            return (int) $node->extract([$paginator['source']])[0];
         });
+    }
+
+    private function searchPath(Crawler $node, array $field): string
+    {
+        if ($field['path']) {
+            return $node->filter($field['path'])->extract([$field['source']])[0] ?? '';
+        }
+
+        return $node->extract([$field['source']])[0] ?? '';
     }
 }

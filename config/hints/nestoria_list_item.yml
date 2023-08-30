@@ -1,18 +1,40 @@
 ---
-item: .rating__new
+item:
+  path: .rating__new
 fieldList:
-  - reference: .results__link@data-id
-  - url: .results__link@data-href
-  - title: .listing__title__text@_text
-  - price: .result__details__price span@_text
-    sanitize: /[^\d]+/
-  - picture: .listing_list__cover img.desktopImg@data-lazy
-  - rooms: .summary-item.rooms span.rooms@_text
-    sanitize: /[^\d]+/
-  - size: .summary-item.size span.size@_text
-    sanitize: /[^\d]+/
-  - bathrooms: .summary-item.rooms span.bathrooms@_text
-    sanitize: /[^\d]+/
-  - floor:
+  reference:
+    path: .results__link
+    source: data-id
+  url:
+    path: .results__link
+    source: data-href
+  title:
+    path: .listing__title__text
+    source: _text
+  price:
+    path: .result__details__price span
+    source: _text
+    purge: /[^\d]+/
+  picture:
+    path: .listing_list__cover img.desktopImg
+    source: data-lazy
+  rooms:
+    path: .summary-item.rooms span.rooms
+    source: _text
+    purge: /[^\d]+/
+  size:
+    path: .summary-item.size span.size
+    source: _text
+    purge: /[^\d]+/
+  bathrooms:
+    path: .summary-item.rooms span.bathrooms
+    source: _text
+    purge: /[^\d]+/
+  floor:
 page:
-  paginator: .pagination-bar .pagination__link@_text
+  paginator:
+    path: .pagination-bar .pagination__link
+    source: _text
+  total_items:
+  current:
+  total:

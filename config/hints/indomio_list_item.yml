@@ -1,15 +1,29 @@
 ---
-item: results
+item:
+  path: results
 fieldList:
-  - reference: realEstate.id
-  - url: seo.url
-  - title: realEstate.title
-  - price: realEstate.price.value
-  - picture: realEstate.properties[0].photo.urls.small
-  - rooms: realEstate.properties[0].rooms
-  - size: realEstate.properties[0].surface
-  - bathrooms: realEstate.properties[0].bathrooms
-  - floor: realEstate.properties[0].floor.abbreviation
+  reference:
+    path: realEstate.id
+  url:
+    path: seo.url
+  title:
+    path: realEstate.title
+  price:
+    path: realEstate.price.value
+  picture:
+    path: realEstate.properties[0].photo.urls.small
+  rooms:
+    path: realEstate.properties[0].rooms
+  size:
+    path: realEstate.properties[0].surface
+  bathrooms:
+    path: realEstate.properties[0].bathrooms
+  floor:
+    path: realEstate.properties[0].floor.abbreviation
 page:
-  current: currentPage
-  total: maxPages
+  paginator:
+  total_items:
+  current:
+    path: currentPage
+  total:
+    path: maxPages

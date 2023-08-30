@@ -1,17 +1,39 @@
 ---
-item: .extended-item
+item:
+  path: .extended-item
 fieldList:
-  - reference: "@data-adid"
-  - url: .item-link@href
-  - title: .item-link@title
-  - price: .item-info-container .item-price@_text
-    sanitize: /[^\d]+/
-  - picture: picture.item-multimedia div.placeholder img@src
-  - rooms: .item-detail:nth-child(1)@_text
-    sanitize: /[^\d]+/
-  - size: .item-detail:nth-child(2)@_text
-    sanitize: /[^\d]+/
-  - bathrooms:
-  - floor: .item-detail:nth-child(3)@_text
+  reference:
+    path:
+    source: data-adid
+  url:
+    path: .item-link
+    source: href
+  title:
+    path: .item-link
+    source: title
+  price:
+    path: .item-info-container .item-price
+    source: _text
+    purge: /[^\d]+/
+  picture:
+    path: picture.item-multimedia div.placeholder img
+    source: src
+  rooms:
+    path: .item-detail:nth-child(1)
+    source: _text
+    purge: /[^\d]+/
+  size:
+    path: .item-detail:nth-child(2)
+    source: _text
+    purge: /[^\d]+/
+  bathrooms:
+  floor:
+    path: .item-detail:nth-child(3)
+    source: _text
 page:
-  paginator: .pagination li@_text
+  paginator:
+    path: .pagination li
+    source: _text
+  total_items:
+  current:
+  total:
