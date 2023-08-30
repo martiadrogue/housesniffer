@@ -90,10 +90,15 @@ class CaveHunterCommand extends Command
         $this->parseTarget($target, $mode);
 
         // !Food zone
-        $output = $this->performanceTracker->stop();
-        $io->text($output);
+        $this->printPerformance($io);
 
         return Command::SUCCESS;
+    }
+
+    private function printPerformance(SymfonyStyle $io): void
+    {
+        $output = $this->performanceTracker->stop();
+        $io->text($output);
     }
 
     private function parseTarget(string $target, string $mode): void
