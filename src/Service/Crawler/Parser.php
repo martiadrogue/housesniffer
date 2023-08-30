@@ -18,20 +18,23 @@ class Parser
      */
     private array $pathMap;
 
-    public function __construct(Operator $operator, HintParser $hintProvider)
+    /**
+     * Parse stream of content and return available pages
+     *
+     * @param Operator $operator
+     * @param Interpreter $interpreter
+     * @param mixed[] $pathMap
+     */
+    public function __construct(Operator $operator, Interpreter $interpreter, array $pathMap)
     {
         $this->operator = $operator;
-
-        $this->pathMap = $hintProvider->parse();
-    }
-
-    public function setInterpreter(Interpreter $interpreter): void
-    {
         $this->interpreter = $interpreter;
+
+        $this->pathMap = $pathMap;
     }
 
     /**
-     * Parse the stream of html to an array
+     * Parse the stream of content to an array
      *
      * @return string[]
      */

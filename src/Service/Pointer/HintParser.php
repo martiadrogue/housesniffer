@@ -2,6 +2,7 @@
 
 namespace App\Service\Pointer;
 
+use Symfony\Component\Yaml\Yaml;
 use App\Service\Pointer\Style\Method;
 use App\Service\Pointer\HintMiddleware;
 
@@ -16,11 +17,11 @@ class HintParser
      */
     private array $hintMap;
     private HintMiddleware $middleware;
-    private Method $tactic;
 
-    public function __construct(Method $tactic, string $target)
+    private const PATH = "config/hints/";
+
+    public function __construct(string $target)
     {
-        $this->tactic = $tactic;
         $this->target = $target;
         $this->hintMap = [];
     }
@@ -47,8 +48,8 @@ class HintParser
      */
     public function parse(): array
     {
-        if (!$this->hintMap) {
-            $this->hintMap = $this->tactic->process($this->hintMap, $this->target);
+        if (empty($this->hintMap)) {
+            $this->hintMap = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
         }
 
         return $this->middleware->check($this->hintMap);

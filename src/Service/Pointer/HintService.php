@@ -7,8 +7,7 @@ use App\Service\Pointer\HintParser;
 use App\Service\Pointer\HintMutator;
 use App\Service\Pointer\HintValidator;
 use App\Service\Pointer\HintMiddleware;
-use App\Service\Pointer\Style\ContentParser;
-use App\Service\Pointer\Style\RequestParser;
+use App\Service\Pointer\Style\Parser;
 use App\Service\Pointer\Style\ContentMutator;
 use App\Service\Pointer\Style\RequestMutator;
 use App\Service\Pointer\Style\ContentValidator;
@@ -25,12 +24,10 @@ class HintService
      */
     public static function parseHintsRequest(string $target, LoggerInterface $logger): HintParser
     {
-        $styleParser = new RequestParser();
+        $server = new HintParser($target . '_list');
         $styleValidator = new RequestValidator($logger);
-        $server = new HintParser($styleParser, $target);
-        $styleMutator = new RequestMutator($server);
-
         $hintMiddleware = new HintValidator($styleValidator, $target);
+        $styleMutator = new RequestMutator($server);
         $hintMiddleware->linkWith(new HintMutator($styleMutator, $target));
         $server->setMiddleware($hintMiddleware);
 
@@ -46,12 +43,10 @@ class HintService
      */
     public static function parseHintsContent(string $target, LoggerInterface $logger): HintParser
     {
-        $styleParser = new ContentParser();
+        $server = new HintParser($target . '_list_item');
         $styleValidator = new ContentValidator($logger);
-        $styleMutator = new ContentMutator();
-
-        $server = new HintParser($styleParser, $target);
         $hintMiddleware = new HintValidator($styleValidator, $target);
+        $styleMutator = new ContentMutator();
         $hintMiddleware->linkWith(new HintMutator($styleMutator, $target));
         $server->setMiddleware($hintMiddleware);
 
