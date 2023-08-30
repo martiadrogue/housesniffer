@@ -104,7 +104,7 @@ class Operator
         $fileName .= sprintf('%s_%s.csv', $this->target, $this->id);
 
         if ($filesystem->exists($fileName)) {
-            $context['no_headers'] = true;/*  */
+            $context['no_headers'] = true;
         }
 
         $csv = $serializer->encode($data, 'csv', $context);
