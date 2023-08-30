@@ -74,7 +74,7 @@ class CaveHunterCommand extends Command
         $this->performanceTracker->start();
         $io = new SymfonyStyle($input, $output);
 
-        // !Input zones
+        // !Input zone
         $target = $input->getArgument('target');
         $io->note(sprintf('Your target is: %s', $target));
 
@@ -82,9 +82,6 @@ class CaveHunterCommand extends Command
         if ($input->getOption('mode')) {
             $io->note(sprintf('Your attack vector is from: %s', $mode));
         }
-
-        // !Validate zone
-        // do things ...
 
         // !TODO zone
         $this->parseTarget($target, $mode);
