@@ -46,16 +46,8 @@ class Operator
         $this->hintRequestProvider->setPage($this->currentPage);
         $stream = $this->retriever->fetchList($this->hintRequestProvider);
 
-        $fileType = $this->solveContentType($stream);
-        $interpreter = $this->buildInterpreter($fileType);
-
-        $parser = new Parser($this, $this->hintContentProvider);
-        $parser->setInterpreter($interpreter);
-
-        $data = $parser->parse($stream);
-
-        $this->persistData($data);
-        unset($data);
+        $parser = $this->getParser($stream);
+        $this->persistContentMap($parser->parse($stream));
 
         $this->currentPage += 1;
         $parser->seekPage($stream, $this->currentPage);
@@ -68,6 +60,18 @@ class Operator
         $fileName = sprintf('%s_%s.csv', $this->target, $this->id);
 
         $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
+    }
+
+    private function getParser(string $stream): Parser
+    {
+        $fileType = $this->solveContentType($stream);
+        $parser = new Parser(
+            $this,
+            $this->buildInterpreter($fileType),
+            $this->hintContentProvider->parse()
+        );
+
+        return $parser;
     }
 
     private function solveContentType(string $stream): string
@@ -91,7 +95,7 @@ class Operator
      * @param string[] $data
      * @return void
      */
-    private function persistData(array $data): void
+    private function persistContentMap(array $data): void
     {
         $context = [];
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
