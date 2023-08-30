@@ -20,7 +20,7 @@ class MarkupInterpreter implements Interpreter
     {
         $crawler = new Crawler($stream);
 
-        return $crawler->filter($hintMap['item']['path'])->each(function (Crawler $node, $index) use ($hintMap): array {
+        return $crawler->filter($hintMap['item']['path'])->each(function (Crawler $node) use ($hintMap): array {
             $item = [];
             foreach ($hintMap['fieldList'] as $key => $field) {
                 if (empty($field)) {
