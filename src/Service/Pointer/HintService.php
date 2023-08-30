@@ -24,7 +24,7 @@ class HintService
      */
     public static function parseHintsRequest(string $target, LoggerInterface $logger): HintParser
     {
-        $server = new HintParser($target . '_list');
+        $server = new HintParser($target);
         $styleValidator = new RequestValidator($logger);
         $hintMiddleware = new HintValidator($styleValidator, $target);
         $styleMutator = new RequestMutator($server);
@@ -43,7 +43,7 @@ class HintService
      */
     public static function parseHintsContent(string $target, LoggerInterface $logger): HintParser
     {
-        $server = new HintParser($target . '_list_item');
+        $server = new HintParser($target . '_item');
         $styleValidator = new ContentValidator($logger);
         $hintMiddleware = new HintValidator($styleValidator, $target);
         $styleMutator = new ContentMutator();

@@ -87,15 +87,20 @@ class CaveHunterCommand extends Command
         // do things ...
 
         // !TODO zone
-        $crawler = new Operator($this->retriever, $target, $this->logger);
-        $target = sprintf('%s_%s', $target, $mode);
-        $crawler->update();
-        $crawler->secureResults();
+        $this->parseTarget($target, $mode);
 
         // !Food zone
         $output = $this->performanceTracker->stop();
         $io->text($output);
 
         return Command::SUCCESS;
+    }
+
+    private function parseTarget(string $target, string $mode): void
+    {
+        $target = sprintf('%s_%s', $target, $mode);
+        $crawler = new Operator($this->retriever, $target, $this->logger);
+        $crawler->update();
+        $crawler->secureResults();
     }
 }
