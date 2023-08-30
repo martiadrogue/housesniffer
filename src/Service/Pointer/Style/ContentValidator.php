@@ -5,7 +5,7 @@ namespace App\Service\Pointer\Style;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -145,7 +145,13 @@ class ContentValidator implements Evaluation
         ]);
     }
 
-    private function getViolationMap(array $hintMap): ConstraintViolationList
+    /**
+     * Returns a map with all violations
+     *
+     * @param mixed[] $hintMap
+     * @return ConstraintViolationListInterface
+     */
+    private function getViolationMap(array $hintMap): ConstraintViolationListInterface
     {
         $groups = new GroupSequence(['Default', 'custom']);
         $constraint = $this->buildConstraintMap();
