@@ -5,6 +5,7 @@ namespace App\Service\Pointer\Style;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -18,22 +19,18 @@ class ContentValidator implements Evaluation
         $this->logger = $logger;
     }
 
-    public function process(array $hintSet, string $target): bool
+    public function process(array $hintMap, string $target): bool
     {
-        $groups = new GroupSequence(['Default', 'custom']);
-        $constraint = $this->buildConstraintMap();
+        $violationMap = $this->getViolationMap($hintMap);
 
-        $validator = Validation::createValidator();
-        $violationSet = $validator->validate($hintSet, $constraint, $groups);
-
-        foreach ($violationSet as $violation) {
+        foreach ($violationMap as $violation) {
             $this->logger->error('A violation occurred in {property}: {message}', [
                 'property' => $violation->getPropertyPath(),
                 'message' => $violation->getMessage(),
             ]);
         }
 
-        if (count($violationSet) > 0) {
+        if (count($violationMap) > 0) {
             throw new ParseException('The data file is not valid according to the model file.');
         }
 
@@ -146,5 +143,14 @@ class ContentValidator implements Evaluation
                 ]),
             ]
         ]);
+    }
+
+    private function getViolationMap(array $hintMap): ConstraintViolationList
+    {
+        $groups = new GroupSequence(['Default', 'custom']);
+        $constraint = $this->buildConstraintMap();
+        $validator = Validation::createValidator();
+
+        return $validator->validate($hintMap, $constraint, $groups);
     }
 }
