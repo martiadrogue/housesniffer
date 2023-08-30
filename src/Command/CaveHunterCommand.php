@@ -2,22 +2,17 @@
 
 namespace App\Command;
 
-use Symfony\Component\Yaml\Yaml;
+use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Operator;
+use App\Service\Crawler\Retriever;
 use App\Service\PerformanceService;
-use App\Service\Pointer\HintConfiguration;
-use App\Service\Pointer\HintValidator;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 #[AsCommand(
     name: 'app:cave-hunter',
@@ -25,13 +20,15 @@ use Symfony\Component\Yaml\Exception\ParseException;
 )]
 class CaveHunterCommand extends Command
 {
+    private Retriever $retriever;
     private PerformanceService $performanceTracker;
-    private Operator $crawler;
+    private LoggerInterface $logger;
 
-    public function __construct(PerformanceService $performanceTracker, Operator $crawler)
+    public function __construct(Retriever $retriever, PerformanceService $performanceTracker, LoggerInterface $logger)
     {
         $this->performanceTracker = $performanceTracker;
-        $this->crawler = $crawler;
+        $this->retriever = $retriever;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -90,10 +87,10 @@ class CaveHunterCommand extends Command
         // do things ...
 
         // !TODO zone
+        $crawler = new Operator($this->retriever, $target, $this->logger);
         $target = sprintf('%s_%s', $target, $mode);
-        $this->crawler->loadHints($target);
-        $this->crawler->update();
-        $this->crawler->secureResults();
+        $crawler->update();
+        $crawler->secureResults();
 
         // !Food zone
         $output = $this->performanceTracker->stop();

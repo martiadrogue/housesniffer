@@ -28,12 +28,17 @@ class Operator
     private const CSV_TMP_PATH = 'var/tmp/csv/';
     private const CSV_PATH = 'var/csv/';
 
-    public function __construct(Retriever $retriever, LoggerInterface $logger)
+    public function __construct(Retriever $retriever, string $target, LoggerInterface $logger)
     {
         $this->retriever = $retriever;
         $this->logger = $logger;
+        $this->target = $target;
+
         $this->id = \time();
         $this->currentPage = 1;
+
+        $this->hintRequestProvider = HintService::parseHintsRequest($target, $logger);
+        $this->hintContentProvider = HintService::parseHintsContent($target, $logger);
     }
 
     public function update(): void
@@ -56,17 +61,6 @@ class Operator
         $parser->seekPage($stream, $this->currentPage);
     }
 
-    public function loadHints(string $target): void
-    {
-        $this->target = $target;
-        $this->hintRequestProvider = HintService::parseHintsRequest($target, $this->logger);
-        $this->hintContentProvider = HintService::parseHintsContent($target, $this->logger);
-    }
-
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
 
     public function secureResults(): void
     {
