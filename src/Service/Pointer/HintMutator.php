@@ -18,7 +18,7 @@ class HintMutator extends HintMiddleware
 
     public function check(array $hintSet): array
     {
-        $hintSet = $this->mutate($hintSet);
+        $hintSet = $this->transform($hintSet);
 
         return parent::check($hintSet);
     }
@@ -29,7 +29,7 @@ class HintMutator extends HintMiddleware
      * @param mixed[] $hintSet
      * @return mixed[]
      */
-    private function mutate(array $hintSet): array
+    private function transform(array $hintSet): array
     {
         return $this->tactic->process($hintSet, $this->target);
     }
