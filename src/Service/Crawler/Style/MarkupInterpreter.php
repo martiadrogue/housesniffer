@@ -16,24 +16,20 @@ class MarkupInterpreter implements Interpreter
         $this->logger = $logger;
     }
 
-    public function parse(string $stream, array $hintList): array
+    public function parse(string $stream, array $hintMap): array
     {
         $crawler = new Crawler($stream);
 
-        return $crawler->filter($hintList['item']['path'])->each(function (Crawler $node, $index) use ($hintList): array {
+        return $crawler->filter($hintMap['item']['path'])->each(function (Crawler $node, $index) use ($hintMap): array {
             $item = [];
-            foreach ($hintList['fieldList'] as $key => $field) {
+            foreach ($hintMap['fieldList'] as $key => $field) {
                 if (empty($field)) {
                     continue;
                 }
 
                 $value = $this->searchPath($node, $field);
 
-                if (isset($field['purge'])) {
-                    $value = preg_replace($field['purge'], '', $value);
-                }
-
-                $item[$key] = preg_replace('/\s+/', ' ', trim($value));
+                $item[$key] = $this->purgeValue($value, $field);
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
@@ -42,10 +38,10 @@ class MarkupInterpreter implements Interpreter
         });
     }
 
-    public function getPageList(string $stream, array $hintList): array
+    public function getPageList(string $stream, array $hintMap): array
     {
         $crawler = new Crawler($stream);
-        $paginator = $hintList['paginator'];
+        $paginator = $hintMap['paginator'];
         return $crawler->filter($paginator['path'])->reduce(
             function (Crawler $node, $index) use ($paginator): bool {
                 $value = $node->extract([$paginator['source']])[0] ?? '';
@@ -61,10 +57,33 @@ class MarkupInterpreter implements Interpreter
         });
     }
 
+    /**
+     * Clean the value
+     *
+     * @param string $value
+     * @param mixed[] $field
+     * @return string
+     */
+    private function purgeValue(string $value, array $field): string
+    {
+        if (isset($field['purge'])) {
+            $value = preg_replace($field['purge'], '', $value);
+        }
+
+        return preg_replace('/\s+/', ' ', trim($value));
+    }
+
+    /**
+     * Get content from given path
+     *
+     * @param Crawler $node
+     * @param mixed[] $field
+     * @return string
+     */
     private function searchPath(Crawler $node, array $field): string
     {
         if ($field['path']) {
-            return $node->filter($field['path'])->extract([$field['source']])[0] ?? '';
+            $node = $node->filter($field['path']);
         }
 
         return $node->extract([$field['source']])[0] ?? '';
