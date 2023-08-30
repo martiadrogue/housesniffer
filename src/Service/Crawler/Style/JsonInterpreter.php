@@ -24,22 +24,34 @@ class JsonInterpreter implements Interpreter
             $item = [];
             foreach ($pathMap['fieldList'] as $path) {
                 $key = array_key_first($path);
-                $value = \jmespath\search($path[$key], $element) ?? '';
+                $value = $this->searchPath($path[$key], $element);
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
 
             return $item;
-        }, \jmespath\search($pathMap['item'], $data));
+        }, $this->searchPath($pathMap['item'], $data));
     }
 
     public function getPageList(string $stream, array $hintList): array
     {
         $data = json_decode($stream, true);
-        $currentPage = \jmespath\search($hintList['current'], $data);
-        $totalPages = \jmespath\search($hintList['total'], $data);
+        $currentPage = intval($this->searchPath($hintList['current'], $data));
+        $totalPages = intval($this->searchPath($hintList['total'], $data));
 
         return range($currentPage, $totalPages);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $path
+     * @param mixed[] $element
+     * @return mixed
+     */
+    private function searchPath(string $path, array $element): mixed
+    {
+        return \jmespath\search($path, $element);
     }
 }
