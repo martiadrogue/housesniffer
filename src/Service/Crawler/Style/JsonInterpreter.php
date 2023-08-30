@@ -49,7 +49,7 @@ class JsonInterpreter implements Interpreter
      * Get content from given path
      *
      * @param mixed[] $element
-     * @param mixed[] $path
+     * @param mixed[] $field
      * @return mixed
      */
     private function searchPath(array $element, array $field): mixed
