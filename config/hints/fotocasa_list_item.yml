@@ -1,0 +1,28 @@
+---
+item:
+  path: realEstates
+fieldList:
+  reference:
+    path: id
+  url:
+    path: detail.es
+  title:
+    path: address.ubication
+  price:
+    path: multimedias[0].url
+  picture:
+    path: multimedias[0].url
+  rooms:
+    path: features[8].value[0]
+  size:
+    path: features[9].value[0]
+  bathrooms:
+    path: features[0].value[0]
+  floor:
+    path: features[2].value[0]
+page:
+  paginator:
+  total_items:
+    path: count
+  current:
+  total_pages:

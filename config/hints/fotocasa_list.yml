@@ -1,0 +1,24 @@
+---
+url: https://web.gw.fotocasa.es/v2/propertysearch/search
+method: GET
+query:
+  combinedLocationIds: 724,9,8,232,376,8019,0,0,0
+  culture: es-ES
+  includePurchaseTypeFacets: "true"
+  isMap: "false"
+  isNewConstructionPromotions: "false"
+  latitude: 41.3854
+  longitude: 2.17754
+  pageNumber: "{page}"
+  size: 300
+  platformId: 1
+  propertyTypeId: 2
+  sortOrderDesc: "false"
+  sortType: price
+  transactionTypeId: 1
+parameters:
+  - name: page
+    schema: position
+headers:
+  User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+  Accept-Language: en-US,en;q=0.5
