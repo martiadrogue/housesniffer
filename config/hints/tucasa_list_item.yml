@@ -1,0 +1,40 @@
+---
+item:
+  path: .divisor-tipo-listado:not(.infeed)
+fieldList:
+  reference:
+    path: .idInmuebleAlertaPrecio
+    source: value
+  url:
+    path: .div-btn-detalle:nth-child(2) a
+    source: href
+  title:
+    path: .titulo-inmueble
+    source: _text
+  price:
+    path: .precio-listado
+    source: _text
+    purge: /[^\d]+/
+  picture:
+    path: .contenedor-img-inmueble:nth-child(1) > img, .swiper-slide-active img
+    source: src
+  rooms:
+    path: .num-habitaciones
+    source: _text
+    purge: /[^\d]+/
+  size:
+    path: .metros-cuadrados
+    source: _text
+    purge: /[^\d]+/
+  bathrooms:
+    path: .num-baños
+    source: _text
+    purge: /[^\d]+/
+  floor:
+page:
+  paginator:
+    path: .enlace-paginacion
+    source: _text
+  total_items:
+  current:
+  total_pages:
