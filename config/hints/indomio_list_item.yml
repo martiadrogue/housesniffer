@@ -25,5 +25,5 @@ page:
   total_items:
   current:
     path: currentPage
-  total:
+  total_pages:
     path: maxPages

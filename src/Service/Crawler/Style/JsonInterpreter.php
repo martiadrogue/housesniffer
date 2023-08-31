@@ -10,15 +10,23 @@ use Symfony\Component\DomCrawler\Crawler;
 class JsonInterpreter implements Interpreter
 {
     private LoggerInterface $logger;
+    private int $itemCounter;
+    private int $size;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->itemCounter = 0;
+        $this->size = 0;
     }
 
     public function parse(string $stream, array $hintList): array
     {
         $dataMap = json_decode($stream, true);
+        $itemList = $this->searchPath($dataMap, $hintList['item']);
+        $this->size = count($itemList);
+        $this->itemCounter += $this->size;
+
         return array_map(function ($element) use ($hintList): array {
             $item = [];
             foreach ($hintList['fieldList'] as $key => $field) {
@@ -33,16 +41,32 @@ class JsonInterpreter implements Interpreter
             $this->logger->notice('Parse house ' . $item['title']);
 
             return $item;
-        }, $this->searchPath($dataMap, $hintList['item']));
+        }, $itemList);
     }
 
     public function getPageList(string $stream, array $hintList): array
     {
         $dataMap = json_decode($stream, true);
-        $currentPage = intval($this->searchPath($dataMap, $hintList['current']));
-        $totalPages = intval($this->searchPath($dataMap, $hintList['total']));
+
+        [ $currentPage, $totalPages ] = $this->getPageLimits($dataMap, $hintList);
 
         return range($currentPage, $totalPages);
+    }
+
+    private function getPageLimits(array $dataMap, array $hintList): array
+    {
+        if (isset($hintList['total_items'])) {
+            $totalItems = intval($this->searchPath($dataMap, $hintList['total_items']));
+            $currentPage = $this->itemCounter / $this->size;
+            $totalPages = ceil($totalItems / $this->size);
+
+            return [ $currentPage, $totalPages ];
+        }
+
+        $currentPage = intval($this->searchPath($dataMap, $hintList['current']));
+        $totalPages = intval($this->searchPath($dataMap, $hintList['total_pages']));
+
+        return [ $currentPage, $totalPages ];
     }
 
     /**

@@ -22,6 +22,7 @@ class Operator
     private LoggerInterface $logger;
     private HintParser $hintRequestProvider;
     private HintParser $hintContentProvider;
+    private Parser $parser;
     private int $currentPage;
     private int $id;
 
@@ -46,11 +47,11 @@ class Operator
         $this->hintRequestProvider->setPage($this->currentPage);
         $stream = $this->retriever->fetchList($this->hintRequestProvider);
 
-        $parser = $this->getParser($stream);
-        $this->persistContentMap($parser->parse($stream));
+        $this->parser = $this->getParser($stream);
+        $this->persistContentMap($this->parser->parse($stream));
 
         $this->currentPage += 1;
-        $parser->seekPage($stream, $this->currentPage);
+        $this->parser->seekPage($stream, $this->currentPage);
     }
 
 
@@ -64,14 +65,16 @@ class Operator
 
     private function getParser(string $stream): Parser
     {
-        $fileType = $this->solveContentType($stream);
-        $parser = new Parser(
-            $this,
-            $this->buildInterpreter($fileType),
-            $this->hintContentProvider->parse()
-        );
+        if (empty($this->parser)) {
+            $fileType = $this->solveContentType($stream);
+            return new Parser(
+                $this,
+                $this->buildInterpreter($fileType),
+                $this->hintContentProvider->parse()
+            );
+        }
 
-        return $parser;
+        return $this->parser;
     }
 
     private function solveContentType(string $stream): string
