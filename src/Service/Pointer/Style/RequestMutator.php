@@ -67,6 +67,7 @@ class RequestMutator implements Method
         }
 
         foreach ($data['query'] as $key => $value) {
+            $value = $value ?? '';
             foreach ($data['parameters'] as $parameter) {
                 $data['query'][$key] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $value);
             }
