@@ -5,7 +5,6 @@ namespace App\Service\Crawler;
 use App\Service\Pointer\HintParser;
 use App\Service\Pointer\HintService;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;

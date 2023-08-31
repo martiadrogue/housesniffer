@@ -3,7 +3,6 @@
 namespace App\Service\Crawler\Style;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Yaml\Yaml;
 use App\Service\Crawler\Translation;
 use Symfony\Component\DomCrawler\Crawler;
 
