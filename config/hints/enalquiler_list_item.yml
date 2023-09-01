@@ -14,7 +14,7 @@ fieldList:
   price:
     path: .propertyCard__price--value
     source: _text
-    purge: /[^\d]+/
+    purge: /\D+/
   picture:
     path: .propertyCard__carousel img
     source: srcset
