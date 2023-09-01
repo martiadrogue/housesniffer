@@ -53,6 +53,13 @@ class JsonInterpreter implements Interpreter
         return range($currentPage, $totalPages);
     }
 
+    /**
+     * Returns the pagination limits
+     *
+     * @param mixed[] $dataMap
+     * @param mixed[] $hintList
+     * @return mixed[]
+     */
     private function getPageLimits(array $dataMap, array $hintList): array
     {
         if (isset($hintList['total_items'])) {
