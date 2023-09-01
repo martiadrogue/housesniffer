@@ -22,7 +22,6 @@ class Retriever
         $this->client = $client;
         $this->cache = $cache;
         $this->logger = $logger;
-        // TODO: we have to get a hintservice here
     }
 
     /**
@@ -33,7 +32,6 @@ class Retriever
      */
     public function fetchList(HintParser $hintProcesor): string
     {
-        // TODO: mutator have to be initiated here. But, hint service have to be already working
         $hintMap = $hintProcesor->parse();
         return $this->cache->get(
             sprintf('%s_%s', $hintMap['method'], $hintMap['url']),
