@@ -21,6 +21,7 @@ fieldList:
   floor:
     path: features[2].value[0]
 page:
+  next_page:
   paginator:
   total_items:
     path: count

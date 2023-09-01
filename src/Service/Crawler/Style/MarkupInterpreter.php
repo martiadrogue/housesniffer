@@ -37,10 +37,16 @@ class MarkupInterpreter implements Interpreter
         });
     }
 
-    public function getPageList(string $stream, array $hintMap): array
+    public function getPageList(string $stream, array $hintMap, int $currentPage): array
     {
         $crawler = new Crawler($stream);
+        if (isset($hintMap['next_page'])) {
+            $totalPages = $crawler->filter($hintMap['next_page']['path'])->count();
+            return $totalPages ? range($currentPage, $currentPage + $totalPages) : [];
+        }
+
         $paginator = $hintMap['paginator'];
+
         return $crawler->filter($paginator['path'])->reduce(
             function (Crawler $node, $index) use ($paginator): bool {
                 $value = $node->extract([$paginator['source']])[0] ?? '';

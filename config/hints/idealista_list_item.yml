@@ -30,7 +30,9 @@ fieldList:
   floor:
     path: .item-detail:nth-child(3)
     source: _text
+    purge: /\d+ horas/
 page:
+  next_page:
   paginator:
     path: .pagination li
     source: _text

@@ -23,5 +23,5 @@ interface Interpreter
      * @param array<mixed> $hintList
      * @return array<int>
      */
-    public function getPageList(string $stream, array $hintList): array;
+    public function getPageList(string $stream, array $hintList, int $currentPage): array;
 }

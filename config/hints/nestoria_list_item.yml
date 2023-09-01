@@ -32,6 +32,7 @@ fieldList:
     purge: /[^\d]+/
   floor:
 page:
+  next_page:
   paginator:
     path: .pagination-bar .pagination__link
     source: _text

@@ -23,6 +23,7 @@ fieldList:
   bathrooms:
   floor:
 page:
+  next_page:
   paginator:
     path: .pagination li
     source: _text

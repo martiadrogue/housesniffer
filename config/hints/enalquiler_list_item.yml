@@ -25,13 +25,14 @@ fieldList:
   size:
     path: .propertyCard__details li:nth-child(1)
     source: _text
-    purge: /[^\d]+/
+    purge: /\D+2/
   bathrooms:
     path: .propertyCard__details li:nth-child(3)
     source: _text
     purge: /[^\d]+/
   floor:
 page:
+  next_page:
   paginator:
     path: .pagination li
     source: _text

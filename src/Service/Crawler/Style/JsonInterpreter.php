@@ -44,7 +44,7 @@ class JsonInterpreter implements Interpreter
         }, $itemList);
     }
 
-    public function getPageList(string $stream, array $hintList): array
+    public function getPageList(string $stream, array $hintList, int $currentPage): array
     {
         $dataMap = json_decode($stream, true);
 

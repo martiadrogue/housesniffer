@@ -42,7 +42,7 @@ class ContentValidator implements Evaluation
     private function buildConstraintMap(): Collection
     {
         $itemList = [ 'reference','url', 'title', 'price', 'picture', 'rooms', 'size', 'bathrooms', 'floor', ];
-        $pageList = [ 'paginator','total_items', 'current', 'total_pages', ];
+        $pageList = [ 'paginator','total_items', 'current', 'total_pages', 'next_page', ];
         $collectionItemList = $this->getCollectionList($itemList);
         $collectionPageList = $this->getCollectionList($pageList);
 

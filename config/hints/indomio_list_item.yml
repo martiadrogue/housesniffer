@@ -21,6 +21,7 @@ fieldList:
   floor:
     path: realEstate.properties[0].floor.abbreviation
 page:
+  next_page:
   paginator:
   total_items:
   current:
