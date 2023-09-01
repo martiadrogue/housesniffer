@@ -1,0 +1,41 @@
+---
+item:
+  path: .ad-preview--has-desc
+fieldList:
+  reference:
+    path:
+    source: id
+  url:
+    path: .ad-preview__title
+    source: href
+  title:
+    path: .ad-preview__title
+    source: _text
+  price:
+    path: .ad-preview__price
+    source: _text
+    purge: /[^\d]+/
+  picture:
+    path: .carousel__main-photo:nth-child(1)
+    source: data-bg
+  rooms:
+    path: .ad-preview__char:nth-child(1)
+    source: _text
+    purge: /[^\d]+/
+  size:
+    path: .ad-preview__char:nth-child(3)
+    source: _text
+    purge: /[^\d]+/
+  bathrooms:
+    path: .ad-preview__char:nth-child(2)
+    source: _text
+    purge: /[^\d]+/
+  floor:
+page:
+  next_page:
+    path: .pager-fixed .pagination__next
+    source: _text
+  paginator:
+  total_items:
+  current:
+  total_pages:
