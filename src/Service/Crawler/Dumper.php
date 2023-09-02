@@ -53,6 +53,12 @@ class Dumper
         $this->filesystem->appendToFile($fileName, $csv);
     }
 
+    /**
+     * Tell if the csv is already created or not
+     *
+     * @param string $fileName
+     * @return mixed[]
+     */
     private function getContext(string $fileName): array
     {
         $context = [];
