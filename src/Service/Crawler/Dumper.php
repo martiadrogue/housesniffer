@@ -13,6 +13,9 @@ class Dumper
     private string $target;
     private int $id;
 
+    private Filesystem $filesystem;
+    private Serializer $serializer;
+
     private const CSV_TMP_PATH = 'var/tmp/csv/';
     private const CSV_PATH = 'var/csv/';
 
@@ -20,14 +23,16 @@ class Dumper
     {
         $this->target = $target;
         $this->id = \time();
+
+        $this->filesystem = new Filesystem();
+        $this->serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
     }
 
     public function secure(): void
     {
-        $filesystem = new Filesystem();
         $fileName = $this->getFileName();
 
-        $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
+        $this->filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
     }
 
     /**
@@ -38,18 +43,21 @@ class Dumper
      */
     public function persist(array $data): void
     {
-        $filesystem = new Filesystem();
-        $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $fileName = self::CSV_TMP_PATH;
         $fileName .= $this->getFileName();
 
+        $csv = $this->serializer->encode($data, 'csv', $this->getContext($fileName));
+        $this->filesystem->appendToFile($fileName, $csv);
+    }
+
+    private function getContext(string $fileName): array
+    {
         $context = [];
-        if ($filesystem->exists($fileName)) {
+        if ($this->filesystem->exists($fileName)) {
             $context['no_headers'] = true;
         }
 
-        $csv = $serializer->encode($data, 'csv', $context);
-        $filesystem->appendToFile($fileName, $csv);
+        return $context;
     }
 
     private function getFileName(): string
