@@ -22,7 +22,6 @@ class Operator
     private HintParser $hintRequestProvider;
     private HintParser $hintContentProvider;
 
-    private string $target;
     private int $currentPage;
 
     public function __construct(Retriever $retriever, Dumper $dumper, string $target, LoggerInterface $logger)
@@ -31,7 +30,6 @@ class Operator
         $this->dumper = $dumper;
         $this->logger = $logger;
 
-        $this->target = $target;
         $this->currentPage = 1;
 
         $this->hintRequestProvider = HintService::parseHintsRequest($target, $logger);
