@@ -2,7 +2,7 @@
 
 namespace App\Service\Pointer;
 
-use Symfony\Component\Yaml\Yaml;
+use App\Component\Yaml\Yaml;
 use App\Service\Pointer\Style\Method;
 use App\Service\Pointer\HintMiddleware;
 

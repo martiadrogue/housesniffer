@@ -2,9 +2,10 @@
 
 namespace App\Service\Crawler\Style;
 
+use App\Component\JmesPath;
+use App\Service\Crawler\Translation;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
-use App\Service\Crawler\Translation;
 use Symfony\Component\DomCrawler\Crawler;
 
 class JsonInterpreter implements Interpreter
@@ -85,6 +86,6 @@ class JsonInterpreter implements Interpreter
      */
     private function searchPath(array $element, array $field): mixed
     {
-        return \jmespath\search($field['path'], $element);
+        return JmesPath\search($field['path'], $element);
     }
 }

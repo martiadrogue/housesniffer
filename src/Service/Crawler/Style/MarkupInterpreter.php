@@ -4,7 +4,7 @@ namespace App\Service\Crawler\Style;
 
 use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Translation;
-use Symfony\Component\DomCrawler\Crawler;
+use App\Component\DomCrawler\Crawler;
 
 class MarkupInterpreter implements Interpreter
 {
@@ -47,9 +47,11 @@ class MarkupInterpreter implements Interpreter
 
         $paginator = $hintMap['paginator'];
 
-        return $crawler->filter($paginator['path'])->reduce(
-            function (Crawler $node, $index) use ($paginator): bool {
-                $value = $node->extract([$paginator['source']])[0] ?? '';
+
+        return $crawler->filter($paginatorHint['path'])->reduce(
+            function (Crawler $node, $index) use ($paginatorHint): bool {
+                $value = $node->extractFirst([$paginatorHint['source']]);
+
                 if (is_numeric($value)) {
                     return true;
                 }
@@ -58,7 +60,7 @@ class MarkupInterpreter implements Interpreter
             }
         )->each(function (Crawler $node, $index) use ($paginator): int {
 
-            return (int) $node->extract([$paginator['source']])[0];
+            return (int) $node->extractFirst([$paginatorHint['source']]);
         });
     }
 
@@ -91,6 +93,6 @@ class MarkupInterpreter implements Interpreter
             $node = $node->filter($field['path']);
         }
 
-        return $node->extract([$field['source']])[0] ?? '';
+        return $node->extractFirst([$fieldHint['source']]);
     }
 }
