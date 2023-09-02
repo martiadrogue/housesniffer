@@ -23,8 +23,7 @@ class Yaml
      *
      * @param string $filename The path to the YAML file to be parsed
      * @param int    $flags    A bit field of PARSE_* constants to customize the YAML parser behavior
-     *
-     * @throws ParseException If the file could not be read or the YAML is not valid
+     * @return mixed
      */
     public static function parseFile(string $filename, int $flags = 0): mixed
     {
