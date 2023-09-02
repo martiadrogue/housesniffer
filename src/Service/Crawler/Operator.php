@@ -41,7 +41,7 @@ class Operator
     public function update(): void
     {
         $this->hintRequestProvider->setPage($this->currentPage);
-        $stream = $this->retriever->fetchList($this->hintRequestProvider);
+        $stream = $this->retriever->fetch($this->hintRequestProvider);
 
         $this->parser = $this->getParser($stream);
         $this->dumper->persist($this->parser->parse($stream));

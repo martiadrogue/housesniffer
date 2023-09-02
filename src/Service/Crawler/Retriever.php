@@ -25,12 +25,12 @@ class Retriever
     }
 
     /**
-     * Fetch the house list information from idealista
+     * Fetch house information from a target
      *
      * @param HintParser $hintProcesor
      * @return string
      */
-    public function fetchList(HintParser $hintProcesor): string
+    public function fetch(HintParser $hintProcesor): string
     {
         $hintMap = $hintProcesor->parse();
         return $this->cache->get(
