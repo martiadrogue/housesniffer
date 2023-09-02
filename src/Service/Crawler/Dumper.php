@@ -15,6 +15,7 @@ class Dumper
 
     private Filesystem $filesystem;
     private Serializer $serializer;
+    private LoggerInterface $logger;
 
     private const CSV_TMP_PATH = 'var/tmp/csv/';
     private const CSV_PATH = 'var/csv/';
@@ -24,6 +25,7 @@ class Dumper
         $this->target = $target;
         $this->id = \time();
 
+        $this->logger = $logger;
         $this->filesystem = new Filesystem();
         $this->serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
     }
@@ -33,6 +35,7 @@ class Dumper
         $fileName = $this->getFileName();
 
         $this->filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
+        $this->logger->info('Content has been downloaded successfully');
     }
 
     /**
