@@ -58,22 +58,21 @@ class RequestMutator implements Method
     /**
      * Fill the gaps of the hints
      *
-     * @param array<mixed> $data
+     * @param array<mixed> $dataHint
      * @return array<mixed>
      */
-    private function mutateInput(array $data): array
+    private function mutateInput(array $dataHint): array
     {
-        foreach ($data['parameters'] as $parameter) {
-            $data['url'] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $data['url']);
+        foreach ($dataHint['parameters'] as $parameter) {
+            $dataHint['url'] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $dataHint['url']);
         }
 
-        foreach ($data['query'] as $key => $value) {
-            $value = $value ?? '';
-            foreach ($data['parameters'] as $parameter) {
-                $data['query'][$key] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $value);
+        foreach ($dataHint['query'] as $key => $value) {
+            foreach ($dataHint['parameters'] as $parameter) {
+                $dataHint['query'][$key] = preg_replace("/{({$parameter['name']})}/", $parameter['value'], $value);
             }
         }
 
-        return $data;
+        return $dataHint;
     }
 }

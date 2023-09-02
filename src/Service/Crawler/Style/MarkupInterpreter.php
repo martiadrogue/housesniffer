@@ -45,7 +45,7 @@ class MarkupInterpreter implements Interpreter
             return $totalPages ? range($currentPage, $currentPage + $totalPages) : [];
         }
 
-        $paginator = $hintMap['paginator'];
+        $paginatorHint = $hintMap['paginator'];
 
 
         return $crawler->filter($paginatorHint['path'])->reduce(
@@ -58,7 +58,7 @@ class MarkupInterpreter implements Interpreter
 
                 return false;
             }
-        )->each(function (Crawler $node, $index) use ($paginator): int {
+        )->each(function (Crawler $node, $index) use ($paginatorHint): int {
 
             return (int) $node->extractFirst([$paginatorHint['source']]);
         });
@@ -84,15 +84,16 @@ class MarkupInterpreter implements Interpreter
      * Get content from given path
      *
      * @param Crawler $node
-     * @param mixed[] $field
+     * @param mixed[] $fieldHint
      * @return string
      */
-    private function searchPath(Crawler $node, array $field): string
+    private function searchPath(Crawler $node, array $fieldHint): string
     {
-        if ($field['path']) {
-            $node = $node->filter($field['path']);
+        if ($fieldHint['path']) {
+            $node = $node->filter($fieldHint['path']);
         }
 
         return $node->extractFirst([$fieldHint['source']]);
+
     }
 }

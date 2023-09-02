@@ -30,12 +30,12 @@ class JsonInterpreter implements Interpreter
 
         return array_map(function ($element) use ($hintList): array {
             $item = [];
-            foreach ($hintList['fieldList'] as $key => $field) {
-                if (empty($field)) {
+            foreach ($hintList['fieldList'] as $key => $fieldHint) {
+                if (empty($fieldHint)) {
                     continue;
                 }
 
-                $value = $this->searchPath($element, $field) ?? '';
+                $value = $this->searchPath($element, $fieldHint) ?? '';
                 $item[$key] = preg_replace('/\s+/', ' ', trim($value));
             }
 
