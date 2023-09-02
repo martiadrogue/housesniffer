@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\Crawler\Dumper;
 use Psr\Log\LoggerInterface;
 use App\Service\Crawler\Operator;
 use App\Service\Crawler\Retriever;
@@ -101,8 +102,9 @@ class CaveHunterCommand extends Command
     private function parseTarget(string $target, string $mode): void
     {
         $target = sprintf('%s_%s', $target, $mode);
-        $crawler = new Operator($this->retriever, $target, $this->logger);
+        $dumper = new Dumper($target, $this->logger);
+        $crawler = new Operator($this->retriever, $dumper, $target, $this->logger);
         $crawler->update();
-        $crawler->secureResults();
+        $dumper->secure();
     }
 }

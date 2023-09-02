@@ -3,39 +3,35 @@
 namespace App\Service\Crawler;
 
 use Psr\Log\LoggerInterface;
+use App\Service\Crawler\Dumper;
 use App\Service\Crawler\Parser;
 use App\Service\Crawler\Retriever;
-use App\Service\Pointer\HintService;
 use App\Service\Pointer\HintParser;
+use App\Service\Pointer\HintService;
 use App\Service\Crawler\Style\Interpreter;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Serializer\Serializer;
 use App\Service\Crawler\Style\JsonInterpreter;
 use App\Service\Crawler\Style\MarkupInterpreter;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class Operator
 {
-    private string $target;
     private Retriever $retriever;
+    private Dumper $dumper;
     private LoggerInterface $logger;
+    private Parser $parser;
+
     private HintParser $hintRequestProvider;
     private HintParser $hintContentProvider;
-    private Parser $parser;
+
+    private string $target;
     private int $currentPage;
-    private int $id;
 
-    private const CSV_TMP_PATH = 'var/tmp/csv/';
-    private const CSV_PATH = 'var/csv/';
-
-    public function __construct(Retriever $retriever, string $target, LoggerInterface $logger)
+    public function __construct(Retriever $retriever, Dumper $dumper, string $target, LoggerInterface $logger)
     {
         $this->retriever = $retriever;
+        $this->dumper = $dumper;
         $this->logger = $logger;
-        $this->target = $target;
 
-        $this->id = \time();
+        $this->target = $target;
         $this->currentPage = 1;
 
         $this->hintRequestProvider = HintService::parseHintsRequest($target, $logger);
@@ -48,19 +44,10 @@ class Operator
         $stream = $this->retriever->fetchList($this->hintRequestProvider);
 
         $this->parser = $this->getParser($stream);
-        $this->persistContentMap($this->parser->parse($stream));
+        $this->dumper->persist($this->parser->parse($stream));
 
         $this->currentPage += 1;
         $this->parser->seekPage($stream, $this->currentPage);
-    }
-
-
-    public function secureResults(): void
-    {
-        $filesystem = new Filesystem();
-        $fileName = sprintf('%s_%s.csv', $this->target, $this->id);
-
-        $filesystem->rename(self::CSV_TMP_PATH . $fileName, self::CSV_PATH . $fileName);
     }
 
     private function getParser(string $stream): Parser
@@ -90,28 +77,6 @@ class Operator
         }
 
         return '';
-    }
-
-    /**
-     * Persit data in a file
-     *
-     * @param string[] $data
-     * @return void
-     */
-    private function persistContentMap(array $data): void
-    {
-        $context = [];
-        $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
-        $filesystem = new Filesystem();
-        $fileName = self::CSV_TMP_PATH;
-        $fileName .= sprintf('%s_%s.csv', $this->target, $this->id);
-
-        if ($filesystem->exists($fileName)) {
-            $context['no_headers'] = true;
-        }
-
-        $csv = $serializer->encode($data, 'csv', $context);
-        $filesystem->appendToFile($fileName, $csv);
     }
 
     private function buildInterpreter(string $fileType): Interpreter
