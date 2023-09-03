@@ -88,6 +88,6 @@ class PerformanceService
      */
     private function formatDuration(int $milliseconds): string
     {
-        return gmdate('H:i:s', ($milliseconds / self::MS_IN_S));
+        return gmdate('H:i:s', intval(round($milliseconds / self::MS_IN_S)));
     }
 }
