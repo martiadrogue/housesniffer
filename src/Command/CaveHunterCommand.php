@@ -62,8 +62,8 @@ class CaveHunterCommand extends Command
     {
         $target = sprintf('%s_%s', $target, $mode);
         $dumper = new Dumper($target, $this->logger);
-        $crawler = new Operator($this->retriever, $dumper, $target, $this->logger);
-        $crawler->update();
+        $operator = new Operator($this->retriever, $dumper, $target, $this->logger);
+        $operator->update();
         $dumper->secure();
     }
 
