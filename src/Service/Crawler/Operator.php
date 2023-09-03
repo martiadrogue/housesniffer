@@ -51,10 +51,9 @@ class Operator
     private function getParser(string $stream): Parser
     {
         if (empty($this->parser)) {
-            $fileType = $this->solveContentType($stream);
             return new Parser(
                 $this,
-                $this->buildInterpreter($fileType),
+                $this->buildInterpreterFromContentType($stream),
                 $this->hintContentProvider->parse()
             );
         }
@@ -62,28 +61,15 @@ class Operator
         return $this->parser;
     }
 
-    private function solveContentType(string $stream): string
+    private function buildInterpreterFromContentType(string $stream): Interpreter
     {
         $firstChar = substr(ltrim($stream), 0, 1);
 
         if ('<' == $firstChar) {
-            return 'html';
-        }
-
-        if (in_array($firstChar, ['{', '[', ])) {
-            return 'json';
-        }
-
-        return '';
-    }
-
-    private function buildInterpreter(string $fileType): Interpreter
-    {
-        if ('html' == $fileType) {
             return new MarkupInterpreter($this->logger);
         }
 
-        if ('json' == $fileType) {
+        if (in_array($firstChar, ['{', '[', ])) {
             return new JsonInterpreter($this->logger);
         }
 
