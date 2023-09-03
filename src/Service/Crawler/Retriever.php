@@ -41,7 +41,6 @@ class Retriever
                 $response = $this->client->request($hintMap['method'], $hintMap['url'], [
                     'headers' => $hintMap['headers'],
                 ]);
-                $content = $response->getContent();
 
                 if (isset($hintMap['error']) && $hintMap['error'] == $response->getStatusCode()) {
                     throw new Exception('Response status code is different than expected.');
@@ -49,7 +48,7 @@ class Retriever
 
                 $this->logResult($response);
 
-                return $content;
+                return $response->getContent();
             }
         );
     }
