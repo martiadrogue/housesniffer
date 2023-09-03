@@ -45,8 +45,10 @@ class CaveHunterCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $target = $this->getTarget($input, $io);
         $mode = $this->getMode($input, $io);
+        $headerList = $this->getHeaderList($input, $io);
+        $delay = $this->getDelay($input, $io);
 
-        $this->processTarget($target, $mode);
+        $this->process($target, $mode, $headerList, $delay);
         $this->printPerformance($io);
 
         return Command::SUCCESS;
@@ -58,12 +60,13 @@ class CaveHunterCommand extends Command
         $io->text($output);
     }
 
-    private function processTarget(string $target, string $mode): void
+    private function process(string $target, string $mode, array $headerList, int $delay): void
     {
         $target = sprintf('%s_%s', $target, $mode);
         $dumper = new Dumper($target, $this->logger);
         $operator = new Operator($this->retriever, $dumper, $target, $this->logger);
-        $operator->update();
+
+        $operator->run($headerList, $delay);
         $dumper->secure();
     }
 
@@ -85,6 +88,26 @@ class CaveHunterCommand extends Command
         return $mode;
     }
 
+    private function getDelay(InputInterface $input, SymfonyStyle $io): int
+    {
+        $delay = $input->getOption('delay');
+        if ($delay) {
+            $io->note(sprintf('Time to wait between Requests: %ss', $delay));
+        }
+
+        return $delay;
+    }
+
+    private function getHeaderList(InputInterface $input, SymfonyStyle $io): array
+    {
+        $incipit = $input->getOption('incipit');
+        if ($incipit) {
+            $io->note(sprintf('Hunting with custom headers'));
+        }
+
+        return $incipit;
+    }
+
     private function addArgumentsAndOptions(): void
     {
         $this
@@ -104,11 +127,10 @@ class CaveHunterCommand extends Command
                 0
             )
             ->addOption(
-                'headers',
-                'hd',
-                InputOption::VALUE_OPTIONAL,
-                'Overwrite headers',
-                0
+                'incipit',
+                'i',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Overwrite or add new headers',
             )
             ->addOption(
                 'proxy',

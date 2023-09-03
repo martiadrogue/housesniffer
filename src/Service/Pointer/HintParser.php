@@ -31,6 +31,26 @@ class HintParser
         $this->middleware = $middleware;
     }
 
+    public function setHeaderList(array $headerList): void
+    {
+        $this->headerList = $headerList;
+    }
+
+    public function setDelay(int $delay): void
+    {
+        $this->delay = $delay;
+    }
+
+    public function setRender(bool $render): void
+    {
+        $this->render = $render;
+    }
+
+    public function setProxy(string $proxy): void
+    {
+        $this->proxy = $proxy;
+    }
+
     public function setPage(int $page): void
     {
         $this->page = $page;
@@ -49,9 +69,33 @@ class HintParser
     public function parse(): array
     {
         if (empty($this->hintMap)) {
-            $this->hintMap = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
+            $hintMap = Yaml::parseFile(sprintf(self::PATH . "%s.yml", $this->target));
+            $this->hintMap = $this->addOutput($hintMap);
         }
 
         return $this->middleware->check($this->hintMap);
+    }
+
+    private function addOutput(array $hintMap): array
+    {
+        if (isset($this->headerList)) {
+            $hintMap['headers'] = $this->headerList;
+        }
+
+        if (isset($this->delay)) {
+            $hintMap['delay'] = $this->delay;
+        }
+
+        if (isset($this->headerList)) {
+            foreach ($this->headerList as $key => $value) {
+                $hintMap['headers'][$key] = $value;
+            }
+        }
+
+        if (isset($this->proxy)) {
+            $hintMap['proxy'] = $this->proxy;
+        }
+
+        return $hintMap;
     }
 }

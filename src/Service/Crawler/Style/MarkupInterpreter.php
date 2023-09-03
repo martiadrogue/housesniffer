@@ -94,6 +94,5 @@ class MarkupInterpreter implements Interpreter
         }
 
         return $node->extractFirst([$fieldHint['source']]);
-
     }
 }

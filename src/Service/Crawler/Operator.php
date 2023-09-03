@@ -36,6 +36,14 @@ class Operator
         $this->hintContentProvider = HintService::parseHintsContent($target, $logger);
     }
 
+    public function run(array $headerList, int $delay): void
+    {
+        $this->hintRequestProvider->setHeaderList($headerList);
+        $this->hintRequestProvider->setDelay($delay);
+
+        $this->update();
+    }
+
     public function update(): void
     {
         $this->hintRequestProvider->setPage($this->currentPage);

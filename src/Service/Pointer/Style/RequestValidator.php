@@ -56,7 +56,6 @@ class RequestValidator implements Evaluation
             ],
             'query' => new Constraints\Optional([
                 new Constraints\Type('array'),
-                new Constraints\Count(['min' => 1]),
             ]),
             'parameters' => new Constraints\Optional([
                 new Constraints\Type('array'),
@@ -64,7 +63,9 @@ class RequestValidator implements Evaluation
             ]),
             'headers' => new Constraints\Optional([
                 new Constraints\Type('array'),
-                new Constraints\Count(['min' => 1]),
+            ]),
+            'delay' => new Constraints\Optional([
+                new Constraints\Type(['type' => 'int']),
             ]),
             'error' => new Constraints\Optional(new Constraints\Type(['type' => 'int'])),
         ]);

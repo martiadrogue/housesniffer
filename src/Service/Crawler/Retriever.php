@@ -36,6 +36,7 @@ class Retriever
         return $this->cache->get(
             sprintf('%s_%s', $hintMap['method'], $hintMap['url']),
             function (ItemInterface $item) use ($hintMap): string {
+                sleep($hintMap['delay']);
                 $item->expiresAfter(3600 * 24);
 
                 $response = $this->client->request($hintMap['method'], $hintMap['url'], [
