@@ -13,7 +13,7 @@ use Symfony\Component;
 class Yaml
 {
     /**
-     * Parses a YAML file into a PHP value. And make sure all null values are
+     * Parses a YAML file into a PHP array. And make sure all null values are
      * empty strings
      *
      * Usage:
@@ -23,13 +23,18 @@ class Yaml
      *
      * @param string $filename The path to the YAML file to be parsed
      * @param int    $flags    A bit field of PARSE_* constants to customize the YAML parser behavior
-     * @return mixed
+     * @return mixed[]
      */
-    public static function parseFile(string $filename, int $flags = 0): mixed
+    public static function parseFile(string $filename, int $flags = 0): array
     {
         $content = Component\Yaml\Yaml::parseFile(sprintf($filename, $flags));
 
-        return json_decode(json_encode($content), true);
+        $decoded = json_decode(json_encode($content), true);
 
+        if (null === $decoded) {
+            return [];
+        }
+
+        return $decoded;
     }
 }
