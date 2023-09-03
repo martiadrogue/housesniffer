@@ -2,7 +2,7 @@
 url: https://www.tucasa.com/alquiler/viviendas/barcelona/barcelona/
 method: GET
 query:
-  r:
+  r: ""
   idz: 0008.0001.9999.0001
   pgn: "{page}"
 parameters:

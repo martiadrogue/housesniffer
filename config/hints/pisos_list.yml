@@ -1,7 +1,7 @@
 ---
 url: https://www.pisos.com/alquiler/pisos-barcelona_capital/fecharecientedesde-desc/{page}/
 method: GET
-query:
+query: {}
 parameters:
   - name: page
     schema: position
