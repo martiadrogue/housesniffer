@@ -46,7 +46,7 @@ class CaveHunterCommand extends Command
         $target = $this->getTarget($input, $io);
         $mode = $this->getMode($input, $io);
 
-        $this->parseTarget($target, $mode);
+        $this->processTarget($target, $mode);
         $this->printPerformance($io);
 
         return Command::SUCCESS;
@@ -58,7 +58,7 @@ class CaveHunterCommand extends Command
         $io->text($output);
     }
 
-    private function parseTarget(string $target, string $mode): void
+    private function processTarget(string $target, string $mode): void
     {
         $target = sprintf('%s_%s', $target, $mode);
         $dumper = new Dumper($target, $this->logger);
