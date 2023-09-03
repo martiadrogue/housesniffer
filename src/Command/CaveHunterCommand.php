@@ -36,6 +36,57 @@ class CaveHunterCommand extends Command
 
     protected function configure(): void
     {
+        $this->addArgumentsAndOptions();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $this->performanceTracker->start();
+        $io = new SymfonyStyle($input, $output);
+        $target = $this->getTarget($input, $io);
+        $mode = $this->getMode($input, $io);
+
+        $this->parseTarget($target, $mode);
+        $this->printPerformance($io);
+
+        return Command::SUCCESS;
+    }
+
+    private function printPerformance(SymfonyStyle $io): void
+    {
+        $output = $this->performanceTracker->stop();
+        $io->text($output);
+    }
+
+    private function parseTarget(string $target, string $mode): void
+    {
+        $target = sprintf('%s_%s', $target, $mode);
+        $dumper = new Dumper($target, $this->logger);
+        $crawler = new Operator($this->retriever, $dumper, $target, $this->logger);
+        $crawler->update();
+        $dumper->secure();
+    }
+
+    private function getTarget(InputInterface $input, SymfonyStyle $io): string
+    {
+        $target = $input->getArgument('target');
+        $io->note(sprintf('Your target is: %s', $target));
+
+        return $target;
+    }
+
+    private function getMode(InputInterface $input, SymfonyStyle $io): string
+    {
+        $mode = $input->getOption('mode');
+        if ($mode) {
+            $io->note(sprintf('Your attack vector is from: %s', $mode));
+        }
+
+        return $mode;
+    }
+
+    private function addArgumentsAndOptions(): void
+    {
         $this
             ->addArgument('target', InputArgument::REQUIRED, 'Target to hunt')
             ->addOption(
@@ -63,48 +114,9 @@ class CaveHunterCommand extends Command
                 'proxy',
                 'p',
                 InputOption::VALUE_NONE,
-                'Proxy to hide your identy'
+                'Proxy to hide your identity'
             )
 
         ;
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        // !Head zone
-        $this->performanceTracker->start();
-        $io = new SymfonyStyle($input, $output);
-
-        // !Input zone
-        $target = $input->getArgument('target');
-        $io->note(sprintf('Your target is: %s', $target));
-
-        $mode = $input->getOption('mode');
-        if ($input->getOption('mode')) {
-            $io->note(sprintf('Your attack vector is from: %s', $mode));
-        }
-
-        // !TODO zone
-        $this->parseTarget($target, $mode);
-
-        // !Food zone
-        $this->printPerformance($io);
-
-        return Command::SUCCESS;
-    }
-
-    private function printPerformance(SymfonyStyle $io): void
-    {
-        $output = $this->performanceTracker->stop();
-        $io->text($output);
-    }
-
-    private function parseTarget(string $target, string $mode): void
-    {
-        $target = sprintf('%s_%s', $target, $mode);
-        $dumper = new Dumper($target, $this->logger);
-        $crawler = new Operator($this->retriever, $dumper, $target, $this->logger);
-        $crawler->update();
-        $dumper->secure();
     }
 }
