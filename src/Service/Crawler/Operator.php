@@ -41,24 +41,22 @@ class Operator
         $this->hintRequestProvider->setPage($this->currentPage);
         $stream = $this->retriever->fetch($this->hintRequestProvider);
 
-        $this->parser = $this->getParser($stream);
+        $this->initParser($stream);
         $this->dumper->persist($this->parser->parse($stream));
 
         $this->currentPage += 1;
         $this->parser->seekPage($stream, $this->currentPage);
     }
 
-    private function getParser(string $stream): Parser
+    private function initParser(string $stream): void
     {
         if (empty($this->parser)) {
-            return new Parser(
+            $this->parser = new Parser(
                 $this,
                 $this->buildInterpreterFromContentType($stream),
                 $this->hintContentProvider->parse()
             );
         }
-
-        return $this->parser;
     }
 
     private function buildInterpreterFromContentType(string $stream): Interpreter
