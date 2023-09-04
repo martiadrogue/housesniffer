@@ -33,43 +33,58 @@ $ bin/console app:cave-hunter <name_of_target>
 
 List of feeds to scrap
 
- - https://www.tucasa.com/compra-venta/viviendas/barcelona/barcelona/?r=&idz=0008.0001.9999.0001
  - https://www.yaencontre.com/alquiler/pisos/barcelona
- - https://www.pisos.com/alquiler/pisos-barcelona_capital/fecharecientedesde-desc/
- - https://www.fotocasa.es/es/comprar/viviendas/barcelona-capital/todas-las-zonas/l
-   https://web.gw.fotocasa.es/v2/propertysearch/search?combinedLocationIds=724,9,8,232,376,8019,0,0,0&culture=es-ES&includePurchaseTypeFacets=true&isMap=false&isNewConstructionPromotions=false&latitude=41.3854&longitude=2.17754&pageNumber=3&platformId=1&propertyTypeId=2&sortOrderDesc=false&sortType=price&transactionTypeId=1
+   https://api.yaencontre.com/v3/search?family=FLAT&lang=es&location=barcelona&operation=RENT&pageNumber=5&pageSize=42
  - https://www.zillow.com/new-york-ny/
 
 Next Steps
 
- - allow custom headers from command
- - allow delay time from command
+ - add session
+ - rethink mutations
+ - allow webkit from command
  - allow proxy from command
  - store incomplete data to another place
  - fetch pdp of incomplete data
- - group delay, headers and proxy in a same object of request toolkit
- - reword app base on observer pattern, event driven
+
+## Style Rules
+
+ - Use node notation
+ - Use the prefix `List` for simple arrays
+ - Use the prefix `Map` for key value arrays
+ - Use the verb `mutate` on methods that update more than one property
+ - Use the verb `set` on methods that update one property
+ - Use the verb `get` on methods that get a property
+ - Use the verb `is` or `has` on methods that return boolens
+ - Use the name `style` in the package that contains behaviours for the design pattern
+
 
 ## NOTES
 
-Goal is to discover new items, and have te current ones up to date
-Each site works differently (idealista filter recientes means last ads, while
-relevancia means one ad new one ad updated)
-Not all information is available in the feed
-There are 2 tipes of information: critical and complimentary
-Cirital data are ups and downs of price, it's open or sell
-complentary data that are important but don't change. So, there isn't an
-inminent necessity to have it, and having this data up to date is less important than anything
+ - Goal is to discover new items, and have te current ones up to date
+ - Each site works differently (idealista filter recientes means last ads, while
+ relevancia means one ad new one ad updated)
+ - Not all information is available in the feed
+ - There are 2 updates, Apex updates and Complentary updates
+    - Apexs update involves those fields that get updated frequently like the
+    prices
+    - Complentary update involves those fields that are not available in the
+    main feed but are required to give meaing to the item
+ - There are 3 tipes of information: Critical, Complentary and Redundant
+    - Cirital data is everything that helps identify the item
+    - Complentary data is everything the details
+    - Redundant data is everything can be considered overload or isn't directly
+    reltated with the item
 
 steps app
- - vaildate instructions
+ - vaildate hints
  - request data
  - parse data
+ - persist data
 
-steps instructions
- - parse instructions
- - validate instructions
- - mutate instructions
+steps hints
+ - parse hints
+ - validate hints
+ - mutate hints
 
 steps request
  - call request
@@ -78,7 +93,11 @@ steps request
  - do it again
 
 steps for parsing data
- - search keys
+ - search data
+ - parse data
+
+steps persist data
+ - search data
  - parse data
 
 ## License
