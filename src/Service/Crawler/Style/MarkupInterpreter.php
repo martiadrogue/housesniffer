@@ -42,11 +42,11 @@ class MarkupInterpreter implements Interpreter
         $crawler = new Crawler($stream);
         if (isset($hintMap['next_page'])) {
             $totalPages = $crawler->filter($hintMap['next_page']['path'])->count();
+
             return $totalPages ? range($currentPage, $currentPage + $totalPages) : [];
         }
 
         $paginatorHint = $hintMap['paginator'];
-
 
         return $crawler->filter($paginatorHint['path'])->reduce(
             function (Crawler $node, $index) use ($paginatorHint): bool {
