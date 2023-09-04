@@ -78,10 +78,6 @@ class HintParser
 
     private function addOutput(array $hintMap): array
     {
-        if (isset($this->headerList)) {
-            $hintMap['headers'] = $this->headerList;
-        }
-
         if (isset($this->delay)) {
             $hintMap['delay'] = $this->delay;
         }
