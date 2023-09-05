@@ -38,14 +38,14 @@ class Parser
      *
      * @return string[]
      */
-    public function parse(string $stream): array
+    public function parse(): array
     {
-        return $this->interpreter->parse($stream, $this->pathMap);
+        return $this->interpreter->parse($this->pathMap);
     }
 
-    public function seekPage(string $stream, int $currentPage): void
+    public function seekPage(int $currentPage): void
     {
-        $pageList = $this->interpreter->getPageList($stream, $this->pathMap['page'], $currentPage);
+        $pageList = $this->interpreter->getPageList($this->pathMap['page'], $currentPage);
 
         if (in_array($currentPage, $pageList)) {
             $this->operator->update();

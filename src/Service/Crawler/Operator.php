@@ -36,6 +36,13 @@ class Operator
         $this->hintContentProvider = HintService::parseHintsContent($target, $logger);
     }
 
+    /**
+     * Starts fetching content
+     *
+     * @param string[] $headerList
+     * @param integer $delay
+     * @return void
+     */
     public function run(array $headerList, int $delay): void
     {
         $this->hintRequestProvider->setHeaderList($headerList);
@@ -50,10 +57,10 @@ class Operator
         $stream = $this->retriever->fetch($this->hintRequestProvider);
 
         $this->initParser($stream);
-        $this->dumper->persist($this->parser->parse($stream));
+        $this->dumper->persist($this->parser->parse());
 
         $this->currentPage += 1;
-        $this->parser->seekPage($stream, $this->currentPage);
+        $this->parser->seekPage($this->currentPage);
     }
 
     private function initParser(string $stream): void
@@ -72,13 +79,13 @@ class Operator
         $firstChar = substr(ltrim($stream), 0, 1);
 
         if ('<' == $firstChar) {
-            return new MarkupInterpreter($this->logger);
+            return new MarkupInterpreter($stream, $this->logger);
         }
 
         if (in_array($firstChar, ['{', '[', ])) {
-            return new JsonInterpreter($this->logger);
+            return new JsonInterpreter($stream, $this->logger);
         }
 
-        return new MarkupInterpreter($this->logger);
+        return new MarkupInterpreter($stream, $this->logger);
     }
 }

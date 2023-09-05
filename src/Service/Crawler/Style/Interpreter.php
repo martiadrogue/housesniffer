@@ -10,18 +10,16 @@ interface Interpreter
     /**
      * Parse the stream of html to an array
      *
-     * @param string $stream
      * @param array<mixed> $pathMap
      * @return array<mixed>
      */
-    public function parse(string $stream, array $pathMap): array;
+    public function parse(array $pathMap): array;
 
     /**
      * Get all visible pages
      *
-     * @param string $stream
      * @param array<mixed> $hintList
      * @return array<int>
      */
-    public function getPageList(string $stream, array $hintList, int $currentPage): array;
+    public function getPageList(array $hintList, int $currentPage): array;
 }

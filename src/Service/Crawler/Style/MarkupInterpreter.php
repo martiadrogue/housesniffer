@@ -9,25 +9,24 @@ use App\Component\DomCrawler\Crawler;
 class MarkupInterpreter implements Interpreter
 {
     private LoggerInterface $logger;
+    private Crawler $crawler;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(string $stream, LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->crawler = new Crawler($stream);
     }
 
-    public function parse(string $stream, array $hintMap): array
+    public function parse(array $hintMap): array
     {
-        $crawler = new Crawler($stream);
+        return $this->crawler->filter($hintMap['item']['path'])->each(function (Crawler $node) use ($hintMap): array {
+            $hintMap['fieldList'] = array_filter($hintMap['fieldList'], function (?array $fieldHint): bool {
+                return isset($fieldHint);
+            });
 
-        return $crawler->filter($hintMap['item']['path'])->each(function (Crawler $node) use ($hintMap): array {
             $item = [];
             foreach ($hintMap['fieldList'] as $key => $field) {
-                if (empty($field)) {
-                    continue;
-                }
-
                 $value = $this->searchPath($node, $field);
-
                 $item[$key] = $this->purgeValue($value, $field);
             }
 
@@ -37,18 +36,17 @@ class MarkupInterpreter implements Interpreter
         });
     }
 
-    public function getPageList(string $stream, array $hintMap, int $currentPage): array
+    public function getPageList(array $hintMap, int $currentPage): array
     {
-        $crawler = new Crawler($stream);
         if (isset($hintMap['next_page'])) {
-            $totalPages = $crawler->filter($hintMap['next_page']['path'])->count();
+            $totalPages = $this->crawler->filter($hintMap['next_page']['path'])->count();
 
             return $totalPages ? range($currentPage, $currentPage + $totalPages) : [];
         }
 
         $paginatorHint = $hintMap['paginator'];
 
-        return $crawler->filter($paginatorHint['path'])->reduce(
+        return $this->crawler->filter($paginatorHint['path'])->reduce(
             function (Crawler $node, $index) use ($paginatorHint): bool {
                 $value = $node->extractFirst([$paginatorHint['source']]);
 

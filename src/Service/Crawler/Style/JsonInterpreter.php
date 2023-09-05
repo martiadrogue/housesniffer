@@ -11,20 +11,26 @@ use Symfony\Component\DomCrawler\Crawler;
 class JsonInterpreter implements Interpreter
 {
     private LoggerInterface $logger;
+    /**
+     * Stream parsed
+     *
+     * @var mixed[]
+     */
+    private array $dataMap;
     private int $itemCounter;
     private int $size;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(string $stream, LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->dataMap = json_decode($stream, true) ?? [];
         $this->itemCounter = 0;
         $this->size = 0;
     }
 
-    public function parse(string $stream, array $hintList): array
+    public function parse(array $hintList): array
     {
-        $dataMap = json_decode($stream, true);
-        $itemList = $this->searchPath($dataMap, $hintList['item']);
+        $itemList = $this->searchPath($this->dataMap, $hintList['item']);
         $this->size = count($itemList);
         $this->itemCounter += $this->size;
 
@@ -45,11 +51,9 @@ class JsonInterpreter implements Interpreter
         }, $itemList);
     }
 
-    public function getPageList(string $stream, array $hintList, int $currentPage): array
+    public function getPageList(array $hintList, int $currentPage): array
     {
-        $dataMap = json_decode($stream, true);
-
-        [ $currentPage, $totalPages ] = $this->getPageLimits($dataMap, $hintList);
+        [ $currentPage, $totalPages ] = $this->getPageLimits($this->dataMap, $hintList);
 
         return range($currentPage, $totalPages);
     }
