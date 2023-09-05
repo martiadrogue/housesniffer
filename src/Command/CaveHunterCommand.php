@@ -60,6 +60,15 @@ class CaveHunterCommand extends Command
         $io->text($output);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $target
+     * @param string $mode
+     * @param string[] $headerList
+     * @param integer $delay
+     * @return void
+     */
     private function process(string $target, string $mode, array $headerList, int $delay): void
     {
         $target = sprintf('%s_%s', $target, $mode);
@@ -98,6 +107,13 @@ class CaveHunterCommand extends Command
         return $delay;
     }
 
+    /**
+     * Returns parameter header
+     *
+     * @param InputInterface $input
+     * @param SymfonyStyle $io
+     * @return string[]
+     */
     private function getHeaderList(InputInterface $input, SymfonyStyle $io): array
     {
         $incipit = $input->getOption('incipit');
