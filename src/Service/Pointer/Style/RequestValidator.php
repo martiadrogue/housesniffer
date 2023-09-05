@@ -8,6 +8,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class RequestValidator implements Evaluation
 {
@@ -20,11 +21,7 @@ class RequestValidator implements Evaluation
 
     public function process(array $hintSet, string $target): bool
     {
-        $groups = new GroupSequence(['Default', 'custom']);
-        $constraint = $this->buildConstraintMap();
-
-        $validator = Validation::createValidator();
-        $violationSet = $validator->validate($hintSet, $constraint, $groups);
+        $violationSet = $this->getValidationSet($hintSet);
 
         foreach ($violationSet as $violation) {
             $this->logger->error('A violation occurred in {property}: {message}', [
@@ -42,8 +39,22 @@ class RequestValidator implements Evaluation
         return true;
     }
 
+    /**
+     * validates hints and returns violations
+     *
+     * @param mixed[] $hintSet
+     * @return ConstraintViolationListInterface
+     */
+    private function getValidationSet(array $hintSet): ConstraintViolationListInterface
+    {
+        $groups = new GroupSequence(['Default', 'custom']);
+        $constraint = $this->buildConstraintMap();
+        $validator = Validation::createValidator();
 
-    public function buildConstraintMap(): Collection
+        return $validator->validate($hintSet, $constraint, $groups);
+    }
+
+    private function buildConstraintMap(): Collection
     {
         return new Collection([
             'url' => [
