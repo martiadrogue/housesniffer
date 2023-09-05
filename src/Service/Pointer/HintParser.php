@@ -11,6 +11,13 @@ class HintParser
     private string $target;
     private int $page;
     /**
+     * Custom Headers
+     *
+     * @var string[]
+     */
+    private array $headerList;
+    private int $delay;
+    /**
      * Hints to parse to content
      *
      * @var mixed[]
@@ -31,6 +38,12 @@ class HintParser
         $this->middleware = $middleware;
     }
 
+    /**
+     * sets custom headers
+     *
+     * @param string[] $headerList
+     * @return void
+     */
     public function setHeaderList(array $headerList): void
     {
         $this->headerList = $headerList;
@@ -39,16 +52,6 @@ class HintParser
     public function setDelay(int $delay): void
     {
         $this->delay = $delay;
-    }
-
-    public function setRender(bool $render): void
-    {
-        $this->render = $render;
-    }
-
-    public function setProxy(string $proxy): void
-    {
-        $this->proxy = $proxy;
     }
 
     public function setPage(int $page): void
@@ -76,6 +79,12 @@ class HintParser
         return $this->middleware->check($this->hintMap);
     }
 
+    /**
+     * adds output data
+     *
+     * @param mixed[] $hintMap
+     * @return mixed[]
+     */
     private function addOutput(array $hintMap): array
     {
         if (isset($this->delay)) {
