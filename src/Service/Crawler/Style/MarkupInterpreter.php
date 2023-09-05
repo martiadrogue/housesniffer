@@ -66,14 +66,13 @@ class MarkupInterpreter implements Interpreter
      * Clean the value
      *
      * @param string $value
-     * @param mixed[] $field
+     * @param mixed[] $fieldHint
      * @return string
      */
-    private function purgeValue(string $value, array $field): string
+    private function purgeValue(string $value, array $fieldHint): string
     {
-        if (isset($field['purge'])) {
-            $value = preg_replace($field['purge'], '', $value);
-        }
+        $purgePattern = $fieldHint['purge'] ?? '//';
+        $value = preg_replace($purgePattern, '', $value);
 
         return preg_replace('/\s+/', ' ', trim($value));
     }
