@@ -31,10 +31,10 @@ class RequestValidator implements Evaluation
         }
 
         if (count($violationSet) > 0) {
-            throw new ParseException('The data file is not valid according to the model file.');
+            throw new ParseException('Data file is not valid according to the model file.');
         }
 
-        $this->logger->notice("YAML syntax for the Request of {$target} is valid.");
+        $this->logger->notice("Valid syntax for {$target}.");
 
         return true;
     }
