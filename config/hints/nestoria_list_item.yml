@@ -18,6 +18,13 @@ fieldList:
   picture:
     path: .listing_list__cover img.desktopImg
     source: data-lazy
+  address:
+    path: .listing__title__text
+    source: _text
+    purge: /Piso\s+en\s+|.*Alquiler\s+en\s+|\s+-\s+.*/
+  zip_code:
+  latitude:
+  longitude:
   rooms:
     path: .summary-item.rooms span.rooms
     source: _text

@@ -18,6 +18,12 @@ fieldList:
   picture:
     path: .propertyCard__carousel img
     source: srcset
+  address:
+    path: .propertyCard__location p
+    source: _text
+  zip_code:
+  latitude:
+  longitude:
   rooms:
     path: .propertyCard__details li:nth-child(2)
     source: _text

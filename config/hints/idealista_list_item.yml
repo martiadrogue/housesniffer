@@ -18,6 +18,13 @@ fieldList:
   picture:
     path: picture.item-multimedia div.placeholder img
     source: src
+  address:
+    path: .item-link
+    source: _text
+    purge: /.*?\s+en\s+/
+  zip_code:
+  latitude:
+  longitude:
   rooms:
     path: .item-detail:nth-child(1)
     source: _text

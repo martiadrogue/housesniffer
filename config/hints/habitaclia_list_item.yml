@@ -18,8 +18,20 @@ fieldList:
   picture:
     path: .image img
     source: src
+  address:
+    path: .list-item-location span
+    source: _text
+  zip_code:
+  latitude:
+  longitude:
   rooms:
+    path: .list-item-feature
+    source: _text
+    purge: /.*m2\s*-\s*|\s*habita.*/
   size:
+    path: .list-item-feature
+    source: _text
+    purge: /m2\s*-.*/
   bathrooms:
   floor:
 page:

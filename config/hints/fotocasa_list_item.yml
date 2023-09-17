@@ -12,6 +12,14 @@ fieldList:
     path: multimedias[0].url
   picture:
     path: multimedias[0].url
+  address:
+    path: address.ubication
+  zip_code:
+    path: address.zipCode
+  latitude:
+    path: address.coordinates.latitude
+  longitude:
+    path: address.coordinates.longitude
   rooms:
     path: features[8].value[0]
   size:

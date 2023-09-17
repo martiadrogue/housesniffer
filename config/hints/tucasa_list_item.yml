@@ -18,6 +18,13 @@ fieldList:
   picture:
     path: .contenedor-img-inmueble:nth-child(1) > img, .swiper-slide-active img
     source: src
+  address:
+    path: .calle-inmueble
+    source: _text
+    purge: /Loft\s+en\s+|Ático\s+en\s+|Apartamento\s+en\s+|Piso\s+en\s+/
+  zip_code:
+  latitude:
+  longitude:
   rooms:
     path: .num-habitaciones
     source: _text

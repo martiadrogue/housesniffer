@@ -18,6 +18,13 @@ fieldList:
   picture:
     path: .carousel__main-photo:nth-child(1)
     source: data-bg
+  address:
+    path: .ad-preview__title
+    source: _text
+    purge: /Loft\s+en\s+|Ático\s+en\s+|Apartamento\s+en\s+|Piso\s+en\s+/
+  zip_code:
+  latitude:
+  longitude:
   rooms:
     path: .ad-preview__char:nth-child(1)
     source: _text

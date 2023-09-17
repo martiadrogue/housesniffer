@@ -12,12 +12,21 @@ fieldList:
     path: realEstate.price.value
   picture:
     path: realEstate.properties[0].photo.urls.small
+  address:
+    path: realEstate.properties[0].location.macrozone
+  zip_code:
+  latitude:
+    path: realEstate.properties[0].location.latitude
+  longitude:
+    path: realEstate.properties[0].location.longitude
   rooms:
     path: realEstate.properties[0].rooms
   size:
     path: realEstate.properties[0].surface
+    purge: /\D+/
   bathrooms:
     path: realEstate.properties[0].bathrooms
+    purge: /\D+/
   floor:
     path: realEstate.properties[0].floor.abbreviation
 page:
