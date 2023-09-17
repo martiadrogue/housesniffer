@@ -47,7 +47,7 @@ class JsonInterpreter implements Interpreter
                 }
 
                 $value = $this->searchPath($element, $fieldHint) ?? '';
-                $item[$key] = preg_replace('/\s+/', ' ', trim($value));
+                $item[$key] = $this->purgeValue($value, $fieldHint);
             }
 
             $this->logger->notice('Parse house ' . $item['title']);
@@ -61,6 +61,21 @@ class JsonInterpreter implements Interpreter
         [ $currentPage, $totalPages ] = $this->getPageLimits($this->dataMap, $hintList);
 
         return range($currentPage, $totalPages);
+    }
+
+    /**
+     * Clean the value
+     *
+     * @param string $value
+     * @param mixed[] $fieldHint
+     * @return string
+     */
+    private function purgeValue(string $value, array $fieldHint): string
+    {
+        $purgePattern = $fieldHint['purge'] ?? '//';
+        $value = preg_replace($purgePattern, '', $value);
+
+        return preg_replace('/\s+/', ' ', trim($value));
     }
 
     /**
