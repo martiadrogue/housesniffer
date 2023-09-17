@@ -16,12 +16,14 @@ class Retriever
     private HttpClientInterface $client;
     private CacheInterface $cache;
     private LoggerInterface $logger;
+    private string $previousContentHash;
 
     public function __construct(HttpClientInterface $client, CacheInterface $cache, LoggerInterface $logger)
     {
         $this->client = $client;
         $this->cache = $cache;
         $this->logger = $logger;
+        $this->previousContentHash = '';
     }
 
     /**
@@ -47,9 +49,20 @@ class Retriever
                     throw new Exception('Response status code is different than expected.');
                 }
 
+                $content = $response->getContent();
+                if (empty($content)) {
+                    throw new Exception('The content is empty.');
+                }
+
+                $contentHash = hash('sha256', $content);
+                if ($contentHash == $this->previousContentHash) {
+                    throw new Exception("Content isn't up to date.");
+                }
+                $this->previousContentHash = $contentHash;
+
                 $this->logResult($response);
 
-                return $response->getContent();
+                return $content;
             }
         );
     }

@@ -25,12 +25,15 @@ class Parser
      * @param Interpreter $interpreter
      * @param mixed[] $pathMap
      */
-    public function __construct(Operator $operator, Interpreter $interpreter, array $pathMap)
+    public function __construct(Operator $operator, array $pathMap)
     {
         $this->operator = $operator;
-        $this->interpreter = $interpreter;
-
         $this->pathMap = $pathMap;
+    }
+
+    public function setStyle(Interpreter $interpreter): void
+    {
+        $this->interpreter = $interpreter;
     }
 
     /**
@@ -38,8 +41,10 @@ class Parser
      *
      * @return string[]
      */
-    public function parse(): array
+    public function parse(string $stream): array
     {
+        $this->interpreter->setStream($stream);
+
         return $this->interpreter->parse($this->pathMap);
     }
 
