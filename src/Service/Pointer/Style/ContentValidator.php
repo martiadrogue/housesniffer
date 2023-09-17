@@ -31,10 +31,10 @@ class ContentValidator implements Evaluation
         }
 
         if (count($violationMap) > 0) {
-            throw new ParseException('The data file is not valid according to the model file.');
+            throw new ParseException('Data file is not valid according to the model file.');
         }
 
-        $this->logger->notice("YAML syntax for the Content of {$target}_item is valid.");
+        $this->logger->notice("Valid syntax for {$target}.");
 
         return true;
     }
