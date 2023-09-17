@@ -14,6 +14,11 @@ class MarkupInterpreter implements Interpreter
     public function __construct(string $stream, LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->setStream($stream);
+    }
+
+    public function setStream(string $stream): void
+    {
         $this->crawler = new Crawler($stream);
     }
 

@@ -7,6 +7,8 @@ use Symfony\Component\DomCrawler\Crawler;
 
 interface Interpreter
 {
+    public function setStream(string $stream): void;
+
     /**
      * Parse the stream of html to an array
      *

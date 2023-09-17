@@ -11,6 +11,7 @@ use App\Service\Pointer\HintService;
 use App\Service\Crawler\Style\Interpreter;
 use App\Service\Crawler\Style\JsonInterpreter;
 use App\Service\Crawler\Style\MarkupInterpreter;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
 class Operator
 {
@@ -18,9 +19,9 @@ class Operator
     private Dumper $dumper;
     private LoggerInterface $logger;
     private Parser $parser;
+    private Interpreter $interpreter;
 
     private HintParser $hintRequestProvider;
-    private HintParser $hintContentProvider;
 
     private int $currentPage;
 
@@ -33,7 +34,10 @@ class Operator
         $this->currentPage = 1;
 
         $this->hintRequestProvider = HintService::parseHintsRequest($target, $logger);
-        $this->hintContentProvider = HintService::parseHintsContent($target, $logger);
+        $this->parser = new Parser(
+            $this,
+            HintService::parseHintsContent($target, $logger)->parse()
+        );
     }
 
     /**
@@ -53,24 +57,33 @@ class Operator
 
     public function update(): void
     {
-        $this->hintRequestProvider->setPage($this->currentPage);
-        $stream = $this->retriever->fetch($this->hintRequestProvider);
-
-        $this->initParser($stream);
-        $this->dumper->persist($this->parser->parse());
+        $stream = $this->getStream();
+        $data = $this->getData($stream);
+        $this->dumper->persist($data);
 
         $this->currentPage += 1;
         $this->parser->seekPage($this->currentPage);
     }
 
-    private function initParser(string $stream): void
+    private function getData(string $stream): array
     {
-        if (empty($this->parser)) {
-            $this->parser = new Parser(
-                $this,
-                $this->buildInterpreterFromContentType($stream),
-                $this->hintContentProvider->parse()
-            );
+        $this->setInterpreter($stream);
+
+        return $this->parser->parse($stream);
+    }
+
+    private function getStream(): string
+    {
+        $this->hintRequestProvider->setLocation($this->currentPage);
+
+        return $this->retriever->fetch($this->hintRequestProvider);
+    }
+
+    private function setInterpreter(string $stream): void
+    {
+        if (empty($this->interpreter)) {
+            $this->interpreter = $this->buildInterpreterFromContentType($stream);
+            $this->parser->setStyle($this->interpreter);
         }
     }
 

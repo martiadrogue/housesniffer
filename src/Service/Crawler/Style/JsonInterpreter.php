@@ -28,6 +28,11 @@ class JsonInterpreter implements Interpreter
         $this->size = 0;
     }
 
+    public function setStream(string $stream): void
+    {
+        $this->dataMap = json_decode($stream, true) ?? [];
+    }
+
     public function parse(array $hintList): array
     {
         $itemList = $this->searchPath($this->dataMap, $hintList['item']);

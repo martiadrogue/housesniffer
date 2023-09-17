@@ -9,7 +9,7 @@ use App\Service\Pointer\HintMiddleware;
 class HintParser
 {
     private string $target;
-    private int $page;
+    private int $location;
     /**
      * Custom Headers
      *
@@ -30,6 +30,7 @@ class HintParser
     public function __construct(string $target)
     {
         $this->target = $target;
+        $this->location = 1;
         $this->hintMap = [];
     }
 
@@ -54,14 +55,14 @@ class HintParser
         $this->delay = $delay;
     }
 
-    public function setPage(int $page): void
+    public function setLocation(int $location): void
     {
-        $this->page = $page;
+        $this->location = $location;
     }
 
-    public function getPage(): int
+    public function getLocation(): int
     {
-        return $this->page;
+        return $this->location;
     }
 
     /**

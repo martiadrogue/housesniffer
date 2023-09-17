@@ -15,7 +15,7 @@ class RequestMutator implements Method
 
     public function process(array $hintSet, string $target): array
     {
-        $hintSet['parameters'][0] = $this->mutatePage($hintSet['parameters'][0], $this->server->getPage());
+        $hintSet['parameters'][0] = $this->mutatePage($hintSet['parameters'][0], $this->server->getLocation());
         $hintSet = $this->mutateInput($hintSet);
         $hintSet['url'] = $this->mutateUrl($hintSet['url'], $hintSet['query']);
 
