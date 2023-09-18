@@ -53,13 +53,17 @@ Next Steps
 
 ## Style Rules
 
- - Use node notation
+ - Use yoda notation
  - Use the prefix `List` for simple arrays
  - Use the prefix `Map` for key value arrays
+ - Composition over inheritance
+ - Declarative over imperative
+ - Data hiding
  - Use the verb `mutate` on methods that update more than one property
  - Use the verb `set` on methods that update one property
  - Use the verb `get` on methods that get a property
  - Use the verb `is` or `has` on methods that return boolens
+ - Use the verb `seek` on methods that look for something and the return isn't granted
  - Use the name `style` in the package that contains behaviours for the design pattern
 
 
