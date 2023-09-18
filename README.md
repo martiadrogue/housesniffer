@@ -66,13 +66,12 @@ Next Steps
  - Use the verb `seek` on methods that look for something and the return isn't granted
  - Use the name `style` in the package that contains behaviours for the design pattern
 
-
 ## NOTES
 
  - Goal is to discover new items, and have te current ones up to date
- - Each site works differently (idealista filter recientes means last ads, while
- relevancia means one ad new one ad updated)
- - Not all information is available in the feed
+ - Each site works differently (idealista filter `recientes` means last ads,
+ while `relevancia` means one ad new one ad updated)
+ - Not all parts of the information is available in the feed
  - There are 2 updates, Apex updates and Complentary updates
     - Apexs update involves those fields that get updated frequently like the
     prices
