@@ -72,19 +72,19 @@ Next Steps
  - Each site works differently (idealista filter `recientes` means last ads,
  while `relevancia` means one ad new one ad updated)
  - Not all parts of the information is available in the feed
- - There are 2 updates, Apex updates and Complentary updates
+ - There are 2 updates, Normal updates and Extraordinary updates
     - Apexs update involves those fields that get updated frequently like the
     prices
     - Complentary update involves those fields that are not available in the
     main feed but are required to give meaing to the item
  - There are 3 tipes of information: Critical, Complentary and Redundant
     - Cirital data is everything that helps identify the item
-    - Complentary data is everything the details
-    - Redundant data is everything can be considered overload or isn't directly
+    - Complentary data is everything that contains details
+    - Redundant data is everything that can be considered overload or isn't directly
     reltated with the item
 
 steps app
- - vaildate hints
+ - get hints
  - request data
  - parse data
  - persist data
@@ -95,18 +95,21 @@ steps hints
  - mutate hints
 
 steps request
+ - start session
  - call request
  - return data
  - check for more requests
  - do it again
 
-steps for parsing data
- - search data
+steps parser
+ - get data
+ - get hints
  - parse data
 
-steps persist data
- - search data
- - parse data
+steps persisting
+ - save data
+ - validate data
+ - move data
 
 ## License
 
