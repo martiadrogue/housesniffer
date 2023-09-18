@@ -40,10 +40,15 @@ List of feeds to scrap
 Next Steps
 
  - add session
+ - share params between hints
+ - create composed data from more than one field
  - rethink mutations
+ - use Entities for hints
  - allow webkit from command
  - allow proxy from command
  - store incomplete data to another place
+ - store locator with parsed data
+ - validate parsed data
  - fetch pdp of incomplete data
 
 ## Style Rules
