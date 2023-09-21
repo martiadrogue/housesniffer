@@ -65,6 +65,12 @@ class Operator
         $this->parser->seekPage($this->currentPage);
     }
 
+    /**
+     * Rarse the stream of data and return the content
+     *
+     * @param string $stream
+     * @return mixed[]
+     */
     private function getData(string $stream): array
     {
         $this->setInterpreter($stream);

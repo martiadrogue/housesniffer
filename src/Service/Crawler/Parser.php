@@ -22,7 +22,7 @@ class Parser
      * Parse stream of content and return available pages
      *
      * @param Operator $operator
-     * @param Interpreter $interpreter
+     * @param array $pathMap
      * @param mixed[] $pathMap
      */
     public function __construct(Operator $operator, array $pathMap)
